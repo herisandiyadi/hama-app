@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'peralatan_bloc.dart';
 
 abstract class PeralatanEvent extends Equatable {
@@ -23,4 +24,29 @@ class FetchAllPeralatan extends PeralatanEvent {
   @override
   // TODO: implement props
   List<Object> get props => [noOrder];
+}
+
+class FetchPeralatanByDate extends PeralatanEvent {
+  final String noOrder;
+  final String date;
+
+  FetchPeralatanByDate({required this.noOrder, required this.date});
+  @override
+  // TODO: implement props
+  List<Object> get props => [noOrder, date];
+}
+
+class FetchAllPeralatanByMonth extends PeralatanEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  FetchAllPeralatanByMonth({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  // TODO: implement props
+  List<Object> get props => [noOrder, year, month];
 }

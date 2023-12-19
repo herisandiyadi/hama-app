@@ -82,7 +82,6 @@ class PeralatanRemoteDataSourceImpl implements PeralatanRemoteDataSource {
       'Content-Type': 'application/json',
       'Authorization': '$token'
     };
-
     final response = await client.get(
       Uri.parse('$baseUrl/api/peralatan/getall/$noOrder/$date'),
       headers: headers,
@@ -107,7 +106,7 @@ class PeralatanRemoteDataSourceImpl implements PeralatanRemoteDataSource {
     };
 
     final response = await client.get(
-      Uri.parse('$baseUrl /api/peralatan/getall/$noOrder/$year/$month'),
+      Uri.parse('$baseUrl/api/peralatan/getall/$noOrder/$year/$month'),
       headers: headers,
     );
     final json = jsonDecode(response.body);

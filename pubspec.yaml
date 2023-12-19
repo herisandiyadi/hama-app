@@ -48,6 +48,7 @@ dependencies:
   horizontal_data_table: ^4.3.1
   http: ^1.1.0
   image_picker: ^1.0.4
+  intl: ^0.18.0
   lite_rolling_switch: ^1.0.1
   month_picker_dialog: 2.2.1
   open_file: ^3.3.2

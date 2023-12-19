@@ -17,6 +17,8 @@ import 'package:hama_app/domain/usecase/get_create_order.dart';
 import 'package:hama_app/domain/usecase/get_login.dart';
 import 'package:hama_app/domain/usecase/peralatan/add_peralatan_usecase.dart';
 import 'package:hama_app/domain/usecase/peralatan/get_all_peralatan_usecase.dart';
+import 'package:hama_app/domain/usecase/peralatan/get_peralatan_by_date_usecase.dart';
+import 'package:hama_app/domain/usecase/peralatan/get_peralatan_by_month_usecase.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_date.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_id.dart';
 import 'package:hama_app/domain/usecase/personel/get_add_absen.dart';
@@ -73,6 +75,8 @@ void init() {
 
   locator.registerLazySingleton(() => AddPeralatanUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPeralatanUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllPeralatanByDateUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllPeralatanByMonthUsecase(locator()));
 
   //bloc
 
@@ -89,8 +93,14 @@ void init() {
   locator.registerFactory(
       () => AbsenBloc(getAddAbsen: locator(), getAbsenById: locator()));
 
-  locator.registerFactory(() => PeralatanBloc(
-      addPeralatanUsecase: locator(), getAllPeralatanUsecase: locator()));
+  locator.registerFactory(
+    () => PeralatanBloc(
+      addPeralatanUsecase: locator(),
+      getAllPeralatanUsecase: locator(),
+      getAllPeralatanByDateUsecase: locator(),
+      getAllPeralatanByMonthUsecase: locator(),
+    ),
+  );
 
 //external
   locator.registerLazySingleton(() => http.Client());

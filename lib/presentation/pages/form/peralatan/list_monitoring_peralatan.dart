@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
+import 'package:hama_app/common/utils/text_utils.dart';
 import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/widget/widget_loading_circle.dart';
@@ -165,13 +166,17 @@ class _ListMonitoringPeralatanPageState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '',
+                          dateSelected != null
+                              ? searchCategories == 'by Date'
+                                  ? TextUtils().dateFormatInt(dateSelected)
+                                  : TextUtils().monthFormatInt(dateSelected)
+                              : '',
                           style: greyTextStyle.copyWith(
                             fontSize: 14.sp,
                             fontWeight: bold,
                           ),
                         ),
-                        Icon(Icons.date_range),
+                        const Icon(Icons.date_range),
                       ],
                     ),
                   ),
@@ -181,18 +186,39 @@ class _ListMonitoringPeralatanPageState
                 width: 14.w,
               ),
               SizedBox(
-                width: 50.w,
+                width: 55.w,
                 height: 55.h,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(greyColor)),
-                    onPressed: () {},
-                    child: Center(
-                      child: const Icon(
-                        Icons.search,
-                        color: whiteColor,
-                      ),
-                    )),
+                child: Center(
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(greyColor)),
+                      onPressed: searchCategories == 'by Date'
+                          ? () {
+                              context.read<PeralatanBloc>().add(
+                                  FetchPeralatanByDate(
+                                      noOrder: widget.noOrder,
+                                      date: TextUtils()
+                                          .dateFormatInt(dateSelected)));
+                            }
+                          : searchCategories == 'by Month'
+                              ? () {
+                                  final year = dateSelected!.year;
+                                  final month = dateSelected!.month;
+                                  context.read<PeralatanBloc>().add(
+                                      FetchAllPeralatanByMonth(
+                                          noOrder: widget.noOrder,
+                                          year: year.toString(),
+                                          month: month.toString()));
+                                }
+                              : null,
+                      child: const Center(
+                        child: Icon(
+                          Icons.search,
+                          color: whiteColor,
+                        ),
+                      )),
+                ),
               )
             ],
           ),

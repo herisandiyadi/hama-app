@@ -18,4 +18,13 @@ class TextUtils {
     final String date = DateFormat('yyyy-MM-dd').format(inputDate);
     return date;
   }
+
+  String monthFormatInt(DateTime? inputDate) {
+    if (inputDate == null) {
+      return '';
+    }
+
+    final String date = DateFormat('yyyy-MM').format(inputDate);
+    return date;
+  }
 }
