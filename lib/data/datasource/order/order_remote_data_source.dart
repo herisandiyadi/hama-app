@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 abstract class OrderRemoteDataSource {
   Future<ListOrderResponse> getAllOrder();
-  Future<OrderResponse> createOrder(String noOrder);
+  Future<OrderResponse> createOrder(String noOrder, String clientName);
 }
 
 class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
@@ -39,13 +39,13 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDataSource {
   }
 
   @override
-  Future<OrderResponse> createOrder(String noOrder) async {
+  Future<OrderResponse> createOrder(String noOrder, String clientName) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {
       'Authorization': '$token',
       'Content-Type': 'application/json'
     };
-    final body = jsonEncode({"no_order": noOrder});
+    final body = jsonEncode({"no_order": noOrder, "clientName": clientName});
     final response = await client.post(
       Uri.parse('$baseUrl/api/order/create'),
       headers: headers,

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
   Future<LoginResponse> login(LoginModel loginModel);
+  Future<String> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -34,10 +35,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final jsonResponse = LoginResponse.fromJson(json);
       CacheUtil.putString(cacheToken, jsonResponse.token);
       CacheUtil.putBoolean(cacheLogin, true);
-      CacheUtil.putString(cacheUsername, jsonResponse.role);
+      CacheUtil.putBoolean(cacheLogin, true);
+      CacheUtil.putString(cacheUsername, jsonResponse.fullName);
       return jsonResponse;
     } else {
       throw MessageException(json['message']);
     }
+  }
+
+  @override
+  Future<String> logout() async {
+    await CacheUtil.clear();
+    return 'Berhasil Logout';
   }
 }

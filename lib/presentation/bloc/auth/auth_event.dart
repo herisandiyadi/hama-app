@@ -15,3 +15,10 @@ class FetchLogin extends AuthEvent {
   @override
   List<Object> get props => [loginRequest];
 }
+
+class FetchLogout extends AuthEvent {
+  const FetchLogout();
+
+  @override
+  List<Object> get props => [];
+}

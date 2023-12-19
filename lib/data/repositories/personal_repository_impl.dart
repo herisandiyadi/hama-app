@@ -5,7 +5,6 @@ import 'package:hama_app/common/utils/exceptions.dart';
 import 'package:hama_app/common/utils/failure.dart';
 import 'package:hama_app/data/datasource/personal/personal_remote_data_source.dart';
 import 'package:hama_app/data/models/personal/absen_model.dart';
-import 'package:hama_app/domain/entities/personal/absen_entity.dart';
 import 'package:hama_app/domain/entities/personal/absen_request.dart';
 import 'package:hama_app/domain/entities/personal/data_absen_entity.dart';
 import 'package:hama_app/domain/entities/personal/personal_entity.dart';
@@ -29,12 +28,11 @@ class PersonalRepositoryImpl implements PersonalRepository {
   }
 
   @override
-  Future<Either<Failure, AbsenEntity>> addAbsen(
-      AbsenRequest absenRequest) async {
+  Future<Either<Failure, String>> addAbsen(AbsenRequest absenRequest) async {
     try {
       final result =
           await remoteDataSource.addAbsen(AbsenModel.fromEntity(absenRequest));
-      return Right(result.toEntity());
+      return Right(result);
     } on MessageException catch (e) {
       return Left(MessageFailure(e.message));
     } on SocketException {

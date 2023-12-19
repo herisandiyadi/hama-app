@@ -15,7 +15,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       : super(OrderInitial()) {
     on<FetchCreateOrder>((event, emit) async {
       emit(OrderLoading());
-      final result = await getCreateOrder.execute(event.noOrder);
+      final result =
+          await getCreateOrder.execute(event.noOrder, event.clientName);
       result.fold((failure) {
         emit(OrderFailed(message: failure.message));
       }, (success) {

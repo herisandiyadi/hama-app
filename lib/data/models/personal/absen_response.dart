@@ -4,7 +4,7 @@ class AbsenResponse {
   final int id;
   final String name;
   final String noOrder;
-  final DateTime tanggal;
+  final String tanggal;
   final String keterangan;
   final DateTime updatedAt;
   final DateTime createdAt;
@@ -23,7 +23,7 @@ class AbsenResponse {
         id: json["id"],
         name: json["name"],
         noOrder: json["no_order"],
-        tanggal: DateTime.parse(json["tanggal"]),
+        tanggal: json["tanggal"],
         keterangan: json["keterangan"],
         updatedAt: DateTime.parse(json["updatedAt"]),
         createdAt: DateTime.parse(json["createdAt"]),
@@ -33,8 +33,7 @@ class AbsenResponse {
         "id": id,
         "name": name,
         "no_order": noOrder,
-        "tanggal":
-            "${tanggal.year.toString().padLeft(4, '0')}-${tanggal.month.toString().padLeft(2, '0')}-${tanggal.day.toString().padLeft(2, '0')}",
+        "tanggal": tanggal,
         "keterangan": keterangan,
         "updatedAt": updatedAt.toIso8601String(),
         "createdAt": createdAt.toIso8601String(),

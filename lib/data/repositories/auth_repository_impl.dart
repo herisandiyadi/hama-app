@@ -25,4 +25,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> logout() async {
+    try {
+      final result = await remoteDataSource.logout();
+      return Right(result);
+    } on MessageException catch (e) {
+      return Left(MessageFailure(e.message));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
 }

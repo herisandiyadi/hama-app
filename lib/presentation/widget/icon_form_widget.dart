@@ -19,8 +19,8 @@ class IconFormWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 130.h,
-        width: 130.w,
+        height: 140.h,
+        width: 140.w,
         decoration: BoxDecoration(
             color: whiteColor,
             shape: BoxShape.rectangle,

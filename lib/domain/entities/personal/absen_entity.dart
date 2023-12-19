@@ -4,7 +4,7 @@ class AbsenEntity extends Equatable {
   final int id;
   final String name;
   final String noOrder;
-  final DateTime tanggal;
+  final String tanggal;
   final String keterangan;
   final DateTime updatedAt;
   final DateTime createdAt;

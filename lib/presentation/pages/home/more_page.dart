@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
+import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:hama_app/presentation/pages/auth/login_page.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});
@@ -69,7 +73,22 @@ class MorePage extends StatelessWidget {
     }
 
     return Column(
-      children: [header()],
+      children: [
+        header(),
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is LogoutSuccess) {
+              context.goNamed(LoginPage.routeName);
+            }
+          },
+          child: ElevatedButton(
+            onPressed: () {
+              context.read<AuthBloc>().add(const FetchLogout());
+            },
+            child: const Text('Logout'),
+          ),
+        )
+      ],
     );
   }
 }

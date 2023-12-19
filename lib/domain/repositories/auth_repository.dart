@@ -5,4 +5,5 @@ import 'package:hama_app/domain/entities/login_request.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, LoginEntity>> login(LoginRequest loginRequest);
+  Future<Either<Failure, String>> logout();
 }

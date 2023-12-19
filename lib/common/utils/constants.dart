@@ -1,4 +1,5 @@
-const String baseUrl = 'https://6118-103-144-175-154.ngrok-free.app';
+const String baseUrl =
+    'https://5bbd-2404-8000-1027-c25d-e48c-b061-a0c6-3c84.ngrok-free.app';
 
 const String cacheToken = 'cache-token';
 const String cacheLogin = 'cache-login';

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hama_app/domain/entities/order/order_entity.dart';
 
 class OrderResponse {
@@ -26,12 +27,16 @@ class OrderResponse {
 class OrderData {
   final int id;
   final String noOrder;
+  final int idUser;
+  final String clientName;
   final DateTime updatedAt;
   final DateTime createdAt;
 
   OrderData({
     required this.id,
     required this.noOrder,
+    required this.idUser,
+    required this.clientName,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -41,6 +46,8 @@ class OrderData {
         noOrder: json["no_order"],
         updatedAt: DateTime.parse(json["updatedAt"]),
         createdAt: DateTime.parse(json["createdAt"]),
+        idUser: json["id_user"],
+        clientName: json["client_name"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +55,8 @@ class OrderData {
         "no_order": noOrder,
         "updatedAt": updatedAt.toIso8601String(),
         "createdAt": createdAt.toIso8601String(),
+        "id_user": idUser,
+        "client_name": clientName,
       };
   OrderDataEntity toEntity() {
     return OrderDataEntity(
@@ -55,6 +64,8 @@ class OrderData {
       noOrder: noOrder,
       updatedAt: updatedAt,
       createdAt: createdAt,
+      idUser: idUser,
+      clientName: clientName,
     );
   }
 }

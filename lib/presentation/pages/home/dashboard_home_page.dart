@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
+import 'package:hama_app/common/utils/cache_utils.dart';
+import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/pages/home/list_order_page.dart';
 import 'package:hama_app/presentation/pages/signature/signature_document.dart';
@@ -19,10 +21,28 @@ class DashboardHomePage extends StatefulWidget {
 class _DashboardHomePageState extends State<DashboardHomePage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController noOrderController = TextEditingController();
+  TextEditingController clientController = TextEditingController();
+  String fullName = '';
   @override
   void dispose() {
     noOrderController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    getName();
+    super.initState();
+  }
+
+  void getName() async {
+    await CacheUtil.getString(cacheUsername).then(
+      (value) {
+        setState(() {
+          fullName = value!;
+        });
+      },
+    );
   }
 
   @override
@@ -62,7 +82,7 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        const Text('name'),
+                        Text(fullName!),
                       ],
                     ),
                   ),
@@ -107,7 +127,7 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                             backgroundColor: Colors.transparent,
                             insetPadding: EdgeInsets.zero,
                             content: Container(
-                              height: 350.h,
+                              height: 400.h,
                               width: 1.sw,
                               padding: const EdgeInsets.all(24),
                               decoration:
@@ -139,6 +159,23 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                                       ),
                                     ),
                                   ),
+                                  TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Masukkan Nama Pelanggan';
+                                      }
+                                      return null;
+                                    },
+                                    autovalidateMode: AutovalidateMode.always,
+                                    controller: clientController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Nama Pelanggan',
+                                      labelStyle: darkTextStyle.copyWith(
+                                        fontSize: 14.sp,
+                                        fontWeight: bold,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(
                                     height: 30.h,
                                   ),
@@ -149,8 +186,9 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                                       onPressed: () {
                                         context.read<OrderBloc>().add(
                                             FetchCreateOrder(
-                                                noOrder:
-                                                    noOrderController.text));
+                                                noOrder: noOrderController.text,
+                                                clientName:
+                                                    clientController.text));
                                       },
                                       style: ButtonStyle(
                                         backgroundColor:

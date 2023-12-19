@@ -26,3 +26,11 @@ final class AuthSuccess extends AuthState {
   @override
   List<Object> get props => [loginEntity];
 }
+
+final class LogoutSuccess extends AuthState {
+  final String message;
+
+  const LogoutSuccess({required this.message});
+  @override
+  List<Object> get props => [message];
+}

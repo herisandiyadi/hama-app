@@ -4,7 +4,6 @@ import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/exceptions.dart';
 import 'package:hama_app/data/models/personal/absen_model.dart';
-import 'package:hama_app/data/models/personal/absen_response.dart';
 import 'package:hama_app/data/models/personal/data_absen_response.dart';
 import 'package:hama_app/data/models/personal/personal_response.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +13,7 @@ abstract class PersonalRemoteDataSource {
   Future<ListPersonelResponse> getAllPersonal(String noOrder);
   Future<String> updatePersonal(String noOrder, String id, String name);
   Future<String> deletePersonal(String noOrder, String id);
-  Future<AbsenResponse> addAbsen(AbsenModel absenModel);
+  Future<String> addAbsen(AbsenModel absenModel);
   Future<DataAbsenResponse> getAbsenByDate(String noOrder, String date);
   Future<DataAbsenResponse> getAbsenById(String noOrder, String id);
 }
@@ -80,7 +79,6 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
       headers: headers,
       body: body,
     );
-    print(response.body);
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
       final jsonResponse = json['message'];
@@ -111,7 +109,7 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
   }
 
   @override
-  Future<AbsenResponse> addAbsen(AbsenModel absenModel) async {
+  Future<String> addAbsen(AbsenModel absenModel) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {
       'Content-Type': 'application/json',
@@ -127,11 +125,11 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
       headers: headers,
       body: body,
     );
+    print(response.body);
 
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      final jsonResponse = AbsenResponse.fromJson(json);
-      return jsonResponse;
+      return json['message'];
     } else {
       throw MessageException(json['message']);
     }

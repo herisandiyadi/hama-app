@@ -14,7 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 //   static const Color creamColor = Color(0xffF2EAA2);
 
 //   static const Color nearlyBlue = Color(0xFF00B6F0);
-//   static const Color nearlyBlack = Color(0xFF213333);
+//   static const Color nearlyBlack = Color(0xFF529EBF);
 //   static const Color grey = Color(0xFF3A5160);
 //   static const Color darkgrey = Color(0xFF313A44);
 
@@ -41,6 +41,7 @@ const Color redColor = Color(0xffc62828);
 const Color greyColor = Color(0xFF9A9FAE);
 // const Color yellowColor = Color(0xFFFFF847);
 const Color blueColor = Color(0xFF2633C5);
+const Color softBlueColor = Color(0xFF529EBF);
 // const Color toscaColor = Color(0xff339F9F);
 // const Color purpleColor = Color(0xff6a1b9a);
 const Color softGreyColor = Color(0xFFEAE8E8);

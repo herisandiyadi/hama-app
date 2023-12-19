@@ -2,16 +2,21 @@ import 'package:get_it/get_it.dart';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:hama_app/data/datasource/order/order_remote_data_source.dart';
+import 'package:hama_app/data/datasource/peralatan/peralatan_remote_data_source.dart';
 import 'package:hama_app/data/datasource/personal/personal_remote_data_source.dart';
 import 'package:hama_app/data/repositories/auth_repository_impl.dart';
 import 'package:hama_app/data/repositories/order_repository_impl.dart';
+import 'package:hama_app/data/repositories/peralatan_repository_impl.dart';
 import 'package:hama_app/data/repositories/personal_repository_impl.dart';
 import 'package:hama_app/domain/repositories/auth_repository.dart';
 import 'package:hama_app/domain/repositories/order_repository.dart';
+import 'package:hama_app/domain/repositories/peralatan_repository.dart';
 import 'package:hama_app/domain/repositories/personal_repository.dart';
 import 'package:hama_app/domain/usecase/get_all_data_order.dart';
 import 'package:hama_app/domain/usecase/get_create_order.dart';
 import 'package:hama_app/domain/usecase/get_login.dart';
+import 'package:hama_app/domain/usecase/peralatan/add_peralatan_usecase.dart';
+import 'package:hama_app/domain/usecase/peralatan/get_all_peralatan_usecase.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_date.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_id.dart';
 import 'package:hama_app/domain/usecase/personel/get_add_absen.dart';
@@ -19,8 +24,11 @@ import 'package:hama_app/domain/usecase/personel/get_add_personal.dart';
 import 'package:hama_app/domain/usecase/personel/get_all_personal.dart';
 import 'package:hama_app/domain/usecase/personel/get_delete_personal.dart';
 import 'package:hama_app/domain/usecase/personel/get_update_personal.dart';
+import 'package:hama_app/domain/usecase/personel/logout_usecase.dart';
+import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
+import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart' as pref;
@@ -35,6 +43,8 @@ void init() {
       () => PersnoalRemoteDataSourceImpl(client: locator()));
   locator.registerLazySingleton<OrderRemoteDataSource>(
       () => OrderRemoteDataSourceImpl(client: locator()));
+  locator.registerLazySingleton<PeralatanRemoteDataSource>(
+      () => PeralatanRemoteDataSourceImpl(client: locator()));
 
 //repository
   locator.registerLazySingleton<AuthRepository>(
@@ -43,9 +53,12 @@ void init() {
       () => PersonalRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<OrderRepository>(
       () => OrderRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<PeralatanRepository>(
+      () => PeralatanRepositoryImpl(remoteDataSource: locator()));
 
 //usecase
   locator.registerLazySingleton(() => GetLogin(locator()));
+  locator.registerLazySingleton(() => LogoutUsecase(locator()));
 
   locator.registerLazySingleton(() => GetAbsenByDate(locator()));
   locator.registerLazySingleton(() => GetAbsenById(locator()));
@@ -58,9 +71,13 @@ void init() {
   locator.registerLazySingleton(() => GetCreateOrder(locator()));
   locator.registerLazySingleton(() => GetAllDataOrder(locator()));
 
+  locator.registerLazySingleton(() => AddPeralatanUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllPeralatanUsecase(locator()));
+
   //bloc
 
-  locator.registerFactory(() => AuthBloc(getLogin: locator()));
+  locator.registerFactory(
+      () => AuthBloc(getLogin: locator(), logoutUsecase: locator()));
   locator.registerFactory(
       () => OrderBloc(getCreateOrder: locator(), getAllDataOrder: locator()));
   locator.registerFactory(() => PersonelBloc(
@@ -68,6 +85,12 @@ void init() {
       getAddPersonal: locator(),
       getDeletePersonal: locator(),
       getUpdatePersonal: locator()));
+
+  locator.registerFactory(
+      () => AbsenBloc(getAddAbsen: locator(), getAbsenById: locator()));
+
+  locator.registerFactory(() => PeralatanBloc(
+      addPeralatanUsecase: locator(), getAllPeralatanUsecase: locator()));
 
 //external
   locator.registerLazySingleton(() => http.Client());

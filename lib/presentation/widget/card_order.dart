@@ -6,13 +6,13 @@ import 'package:hama_app/common/style/style.dart';
 
 class CardOrder extends StatelessWidget {
   final String noOrder;
-  final String personel;
+  final String clientName;
   final Function()? onPressed;
 
   const CardOrder({
     Key? key,
     required this.noOrder,
-    required this.personel,
+    required this.clientName,
     this.onPressed,
   }) : super(key: key);
 
@@ -26,7 +26,7 @@ class CardOrder extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             height: 100.h,
-            width: 350.w,
+            width: 1.sw,
             decoration: BoxDecoration(
               color: softGreyColor,
               borderRadius: BorderRadius.circular(23.r),
@@ -51,13 +51,10 @@ class CardOrder extends StatelessWidget {
                       fontWeight: bold,
                     ),
                   ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
                   Text(
-                    'Jumlah Personel : $personel orang',
+                    'Nama Pelanggan : $clientName',
                     style: darkTextStyle.copyWith(
-                      fontSize: 12.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

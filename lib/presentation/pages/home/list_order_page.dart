@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
-import 'package:hama_app/common/utils/text_utils.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/pages/content/order_page.dart';
 import 'package:hama_app/presentation/widget/card_order.dart';
@@ -64,10 +63,12 @@ class _ListOrderPageState extends State<ListOrderPage> {
                       itemBuilder: (context, index) {
                         final data = state.listOrderEntity.data[index];
                         return CardOrder(
+                          onPressed: () => context.goNamed(
+                            OrderPage.routeName,
+                            extra: data.noOrder,
+                          ),
                           noOrder: data.noOrder,
-                          personel: TextUtils().dateFormatId(data.createdAt),
-                          onPressed: () => context.goNamed(OrderPage.routeName,
-                              extra: data.noOrder),
+                          clientName: data.clientName,
                         );
                       },
                     );

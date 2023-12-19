@@ -8,8 +8,12 @@ class GetCreateOrder {
 
   GetCreateOrder(this.repository);
 
-  Future<Either<Failure, OrderEntity>> execute(String noOrder) {
-    final response = repository.createOrder(noOrder);
+  Future<Either<Failure, OrderEntity>> execute(
+      String noOrder, String clientName) {
+    final response = repository.createOrder(
+      noOrder,
+      clientName,
+    );
     return response;
   }
 }

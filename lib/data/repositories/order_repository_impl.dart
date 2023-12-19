@@ -26,9 +26,10 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either<Failure, OrderEntity>> createOrder(String noOrder) async {
+  Future<Either<Failure, OrderEntity>> createOrder(
+      String noOrder, String clientName) async {
     try {
-      final result = await remoteDataSource.createOrder(noOrder);
+      final result = await remoteDataSource.createOrder(noOrder, clientName);
       return Right(result.toEntity());
     } on MessageException catch (e) {
       return Left(MessageFailure(e.message));

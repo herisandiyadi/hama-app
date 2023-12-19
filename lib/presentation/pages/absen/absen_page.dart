@@ -1,11 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:horizontal_data_table/horizontal_data_table.dart';
-
+import 'package:hama_app/common/router/router.dart';
 import 'package:hama_app/common/style/style.dart';
+import 'package:hama_app/common/utils/text_utils.dart';
+import 'package:hama_app/domain/entities/personal/absen_request.dart';
+import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
+import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
+import 'package:hama_app/presentation/pages/absen/detail_personal_absen.dart';
+import 'package:hama_app/presentation/widget/widget_loading_circle.dart';
+import 'package:hama_app/presentation/widget/widget_snackbar.dart';
 
 class AbsenPage extends StatefulWidget {
   static const routeName = 'absen';
@@ -20,8 +26,56 @@ class AbsenPage extends StatefulWidget {
   State<AbsenPage> createState() => _AbsenPageState();
 }
 
-class _AbsenPageState extends State<AbsenPage> {
-  List<bool> valueState = List.generate(10, (index) => false);
+class _AbsenPageState extends State<AbsenPage> with RouteAware {
+  TextEditingController namePersonelController = TextEditingController();
+  DateTime? dates;
+  List<String> absenStatus = ['Hadir', 'Tidak Hadir'];
+  // String? absen;
+  List<String> absen = [];
+
+// List<bool> valueState = List.generate(10, (index) => false);
+
+  Future<void> datePicker() async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime.now());
+    if (picked != null && picked != dates) {
+      setState(() {
+        dates = picked;
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    Future.microtask(() => context
+        .read<PersonelBloc>()
+        .add(FetchAllPersonel(noOrder: widget.noOrder)));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    namePersonelController.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => context
+        .read<PersonelBloc>()
+        .add(FetchAllPersonel(noOrder: widget.noOrder)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,136 +85,223 @@ class _AbsenPageState extends State<AbsenPage> {
         title: const Text('Absen'),
         backgroundColor: greenColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30.h,
+      body: ListView(
+        children: [
+          SizedBox(
+            height: 30.h,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Text(
+              'Tanggal Absen',
+              style: darkTextStyle.copyWith(
+                  fontSize: 14.sp, fontWeight: FontWeight.w700),
             ),
-            SizedBox(
-              height: 30.h,
-            ),
-            SizedBox(
-              height: 1.sh - 260.h,
-              width: 360.w,
-              child: HorizontalDataTable(
-                leftHandSideColumnWidth: 100,
-                rightHandSideColumnWidth: 200,
-                isFixedHeader: true,
-                headerWidgets: _getTitleWidget(),
-                isFixedFooter: true,
-                footerWidgets: _getTitleWidget(),
-                leftSideItemBuilder: _generateFirstColumnRow,
-                rightSideItemBuilder: _generateRightHandSideColumnRow,
-                itemCount: 10,
-                rowSeparatorWidget: const Divider(
-                  color: Colors.black38,
-                  height: 1.0,
-                  thickness: 0.0,
+          ),
+          GestureDetector(
+            onTap: () => datePicker(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Container(
+                height: 55.h,
+                width: 1.sw,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1.w, color: greyColor),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-                rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-                itemExtent: 55,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        dates != null
+                            ? TextUtils().dateFormatId(dates)
+                            : 'pilih tanggal absen',
+                        style: darkTextStyle.copyWith(fontSize: 16.sp),
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        color: greyColor,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  height: 55.h,
-                  width: 150.w,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(greenColor)),
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: const Text('Submit'),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          BlocBuilder<PersonelBloc, PersonelState>(
+            builder: (context, state) {
+              if (state is PersonelLoading) {
+                return const Center(
+                  child: CircleProgress(),
+                );
+              }
+              if (state is PersonelFailed) {
+                return Center(
+                  child: Text(state.message),
+                );
+              }
+              if (state is GetPersonelSuccess) {
+                if (state.listPersonelEntity.data.isEmpty) {
+                  return const Center(
+                    heightFactor: 30,
+                    child: Text('Data personel kosong'),
+                  );
+                } else {
+                  final data = state.listPersonelEntity.data;
+                  absen = List.generate(data.length, (index) => '');
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 30),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Table(
+                              columnWidths: {
+                                0: FixedColumnWidth(40.w),
+                                1: FixedColumnWidth(150.w),
+                                2: FixedColumnWidth(210.w),
+                              },
+                              border: TableBorder.all(
+                                  width: 1.0.w, color: Colors.black),
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(
+                                    decoration: const BoxDecoration(
+                                        color: softGreyColor),
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          'No',
+                                          style: darkTextStyle.copyWith(
+                                              fontSize: 16, fontWeight: bold),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          'Nama',
+                                          style: darkTextStyle.copyWith(
+                                              fontSize: 16, fontWeight: bold),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Absen',
+                                          style: darkTextStyle.copyWith(
+                                              fontSize: 16, fontWeight: bold),
+                                        ),
+                                      ),
+                                    ]),
+                              ]),
+                          Table(
+                            columnWidths: {
+                              0: FixedColumnWidth(40.w),
+                              1: FixedColumnWidth(150.w),
+                              2: FixedColumnWidth(210.w),
+                            },
+                            border: TableBorder.all(
+                                width: 1.0.w, color: Colors.black),
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            children: List.generate(data.length, (index) {
+                              return TableRow(children: [
+                                Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: darkTextStyle.copyWith(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () => context.goNamed(
+                                      DetailPersonalAbsen.routeName,
+                                      extra: {
+                                        'noOrder': widget.noOrder,
+                                        'id': (data[index].id).toString()
+                                      }),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      data[index].name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: darkTextStyle.copyWith(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                BlocListener<AbsenBloc, AbsenState>(
+                                  listener: (context, state) {
+                                    if (state is AddAbsenSuccess) {
+                                      widgetsnackbar(
+                                          context, state.message, greenColor);
+                                    }
+
+                                    if (state is AbsenFailed) {
+                                      widgetsnackbar(
+                                          context, state.message, redColor);
+                                    }
+                                  },
+                                  child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      fillColor: whiteColor,
+                                      filled: true,
+                                      hintText: 'Absen',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      contentPadding: EdgeInsets.all(12.r),
+                                    ),
+                                    // value: 'absen',
+                                    items: absenStatus
+                                        .map((e) => DropdownMenuItem(
+                                              value: e,
+                                              child: Text(e),
+                                            ))
+                                        .toList(),
+                                    onChanged: ((value) {
+                                      final urut = absenStatus.indexOf(value!);
+                                      setState(() {
+                                        absen[index] = absenStatus[urut];
+                                        context
+                                            .read<AbsenBloc>()
+                                            .add(AddAbsenEvent(
+                                                absenRequest: AbsenRequest(
+                                              idPerson:
+                                                  data[index].id.toString(),
+                                              tanggal: TextUtils()
+                                                  .dateFormatId(dates),
+                                              keterangan: absen[index],
+                                              noOrder: widget.noOrder,
+                                            )));
+                                      });
+                                    }),
+                                  ),
+                                ),
+                              ]);
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              }
+              return const SizedBox();
+            },
+          ),
+        ],
       ),
     ));
-  }
-
-  List<Widget> _getTitleWidget() {
-    return [
-      _getTitleItemWidget('Name', 100),
-      _getTitleItemWidget('Absen', 100),
-      // _getTitleItemWidget('Phone', 200),
-      // _getTitleItemWidget('Register', 100),
-      // _getTitleItemWidget('Termination', 200),
-    ];
-  }
-
-  Widget _getTitleItemWidget(String label, double width) {
-    return Container(
-      width: width,
-      height: 56,
-      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-      alignment: Alignment.centerLeft,
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _generateFirstColumnRow(BuildContext context, int index) {
-    return Container(
-      width: 100,
-      height: 52,
-      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-      alignment: Alignment.centerLeft,
-      child: const Text('name'),
-    );
-  }
-
-  Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 200,
-          height: 50,
-          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
-          child: AnimatedToggleSwitch<bool>.dual(
-            current: valueState[index],
-            first: false,
-            second: true,
-            spacing: 50.0,
-            style: const ToggleStyle(
-              borderColor: Colors.transparent,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 1.5),
-                ),
-              ],
-            ),
-            borderWidth: 5.0,
-            height: 55,
-            onChanged: (b) {
-              setState(() {
-                valueState[index] = b;
-              });
-            },
-            styleBuilder: (b) =>
-                ToggleStyle(indicatorColor: b ? Colors.red : Colors.green),
-            iconBuilder: (value) => value
-                ? const Icon(Icons.coronavirus_rounded)
-                : const Icon(Icons.tag_faces_rounded),
-            textBuilder: (value) => value
-                ? const Center(child: Text('Tidak Hadir'))
-                : const Center(child: Text('Hadir')),
-          ),
-        ),
-
-        // ),
-      ],
-    );
   }
 }

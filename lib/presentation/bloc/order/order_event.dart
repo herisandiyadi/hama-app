@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'order_bloc.dart';
 
 abstract class OrderEvent extends Equatable {
@@ -9,10 +10,14 @@ abstract class OrderEvent extends Equatable {
 
 class FetchCreateOrder extends OrderEvent {
   final String noOrder;
+  final String clientName;
 
-  const FetchCreateOrder({required this.noOrder});
+  const FetchCreateOrder({
+    required this.noOrder,
+    required this.clientName,
+  });
   @override
-  List<Object> get props => [noOrder];
+  List<Object> get props => [noOrder, clientName];
 }
 
 class FetchAllOrder extends OrderEvent {

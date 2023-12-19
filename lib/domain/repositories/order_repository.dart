@@ -5,5 +5,6 @@ import 'package:hama_app/domain/entities/order/order_entity.dart';
 
 abstract class OrderRepository {
   Future<Either<Failure, ListOrderEntity>> getDataOrder();
-  Future<Either<Failure, OrderEntity>> createOrder(String noOrder);
+  Future<Either<Failure, OrderEntity>> createOrder(
+      String noOrder, String clientName);
 }

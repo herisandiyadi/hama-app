@@ -5,8 +5,9 @@ import 'package:hama_app/presentation/pages/form/form_daily_activity.dart';
 import 'package:hama_app/presentation/pages/form/form_index_populasi_hama.dart';
 import 'package:hama_app/presentation/pages/form/form_inspeksi_akses_hama.dart';
 import 'package:hama_app/presentation/pages/form/form_monitoring_pemakaian.dart';
-import 'package:hama_app/presentation/pages/form/form_monitoring_peralatan.dart';
+import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/form/list_data_form.dart';
+import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/widget/icon_form_widget.dart';
 
 class DashboardFormPage extends StatelessWidget {
@@ -27,8 +28,9 @@ class DashboardFormPage extends StatelessWidget {
             IconFormWidget(
               icon: Icons.monitor,
               label: 'Monitoring Peralatan',
-              onPressed: () =>
-                  context.goNamed(FormMonitoringPeralatan.routeName),
+              onPressed: () => context.goNamed(
+                  ListMonitoringPeralatanPage.routeName,
+                  extra: noOrder),
             ),
             IconFormWidget(
               icon: Icons.dvr_outlined,

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/presentation/pages/absen/absen_page.dart';
+import 'package:hama_app/presentation/pages/absen/detail_personal_absen.dart';
 import 'package:hama_app/presentation/pages/auth/login_page.dart';
 import 'package:hama_app/presentation/pages/content/order_page.dart';
 import 'package:hama_app/presentation/pages/form/dashboard_form.dart';
@@ -10,8 +11,9 @@ import 'package:hama_app/presentation/pages/form/form_daily_activity.dart';
 import 'package:hama_app/presentation/pages/form/form_index_populasi_hama.dart';
 import 'package:hama_app/presentation/pages/form/form_inspeksi_akses_hama.dart';
 import 'package:hama_app/presentation/pages/form/form_monitoring_pemakaian.dart';
-import 'package:hama_app/presentation/pages/form/form_monitoring_peralatan.dart';
+import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/form/list_data_form.dart';
+import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/home/list_order_page.dart';
 import 'package:hama_app/presentation/pages/home_page.dart';
 import 'package:hama_app/presentation/pages/personel/personel_page.dart';
@@ -73,6 +75,18 @@ class AppRouter {
                                   );
                                 }),
                             GoRoute(
+                                path: DetailPersonalAbsen.path,
+                                name: DetailPersonalAbsen.routeName,
+                                builder: (context, state) {
+                                  final extras =
+                                      state.extra as Map<String, dynamic>;
+
+                                  return DetailPersonalAbsen(
+                                    noOrder: extras['noOrder'],
+                                    id: extras['id'],
+                                  );
+                                }),
+                            GoRoute(
                                 path: AbsenPage.path,
                                 name: AbsenPage.routeName,
                                 builder: (context, state) {
@@ -92,10 +106,24 @@ class AppRouter {
                                 },
                                 routes: [
                                   GoRoute(
+                                      path: ListMonitoringPeralatanPage.path,
+                                      name:
+                                          ListMonitoringPeralatanPage.routeName,
+                                      builder: (context, state) {
+                                        final extras = state.extra as String;
+
+                                        return ListMonitoringPeralatanPage(
+                                            noOrder: extras);
+                                      }),
+                                  GoRoute(
                                       path: FormMonitoringPeralatan.path,
                                       name: FormMonitoringPeralatan.routeName,
                                       builder: (context, state) {
-                                        return FormMonitoringPeralatan();
+                                        final extras = state.extra as String;
+
+                                        return FormMonitoringPeralatan(
+                                          noOrder: extras,
+                                        );
                                       }),
                                   GoRoute(
                                       path: FormMonitoringPemakaian.path,

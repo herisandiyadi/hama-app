@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class AbsenRequest extends Equatable {
   final String idPerson;
-  final DateTime tanggal;
+  final String tanggal;
   final String keterangan;
   final String noOrder;
 

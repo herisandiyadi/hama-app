@@ -2,7 +2,7 @@ import 'package:hama_app/domain/entities/personal/absen_request.dart';
 
 class AbsenModel {
   final String idPerson;
-  final DateTime tanggal;
+  final String tanggal;
   final String keterangan;
   final String noOrder;
 
@@ -15,15 +15,14 @@ class AbsenModel {
 
   factory AbsenModel.fromJson(Map<String, dynamic> json) => AbsenModel(
         idPerson: json["id_person"],
-        tanggal: DateTime.parse(json["tanggal"]),
+        tanggal: json["tanggal"],
         keterangan: json["keterangan"],
         noOrder: json["noOrder"],
       );
 
   Map<String, dynamic> toJson() => {
         "id_person": idPerson,
-        "tanggal":
-            "${tanggal.year.toString().padLeft(4, '0')}-${tanggal.month.toString().padLeft(2, '0')}-${tanggal.day.toString().padLeft(2, '0')}",
+        "tanggal": tanggal,
         "keterangan": keterangan,
         "noOrder": noOrder
       };

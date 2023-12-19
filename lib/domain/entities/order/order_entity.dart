@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class OrderEntity extends Equatable {
@@ -16,12 +17,16 @@ class OrderEntity extends Equatable {
 class OrderDataEntity extends Equatable {
   final int id;
   final String noOrder;
+  final int idUser;
+  final String clientName;
   final DateTime updatedAt;
   final DateTime createdAt;
 
   const OrderDataEntity({
     required this.id,
     required this.noOrder,
+    required this.idUser,
+    required this.clientName,
     required this.updatedAt,
     required this.createdAt,
   });
@@ -30,6 +35,8 @@ class OrderDataEntity extends Equatable {
   List<Object?> get props => [
         id,
         noOrder,
+        idUser,
+        clientName,
         updatedAt,
         createdAt,
       ];
