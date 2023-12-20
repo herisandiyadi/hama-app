@@ -27,3 +27,12 @@ final class AddDailySuccess extends DailyState {
   @override
   List<Object> get props => [dailyEntity];
 }
+
+final class GetAllDailySuccess extends DailyState {
+  final ListDailyEntity listDailyEntity;
+
+  const GetAllDailySuccess({required this.listDailyEntity});
+
+  @override
+  List<Object> get props => [listDailyEntity];
+}

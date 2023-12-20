@@ -1,12 +1,9 @@
-import 'package:hama_app/domain/entities/daily/daily_entity.dart';
+import 'package:hama_app/domain/entities/inspeksi/inspeksi_entity.dart';
 
-class DailyResponse {
+class InspeksiResponse {
   final int id;
-  final String name;
   final String lokasi;
-  final String jenisTreatment;
-  final String hamaDitemukan;
-  final int jumlah;
+  final String rekomendasi;
   final String tanggal;
   final String buktiFoto;
   final String keterangan;
@@ -14,13 +11,10 @@ class DailyResponse {
   final DateTime updatedAt;
   final DateTime createdAt;
 
-  DailyResponse({
+  InspeksiResponse({
     required this.id,
-    required this.name,
     required this.lokasi,
-    required this.jenisTreatment,
-    required this.hamaDitemukan,
-    required this.jumlah,
+    required this.rekomendasi,
     required this.tanggal,
     required this.buktiFoto,
     required this.keterangan,
@@ -29,13 +23,11 @@ class DailyResponse {
     required this.createdAt,
   });
 
-  factory DailyResponse.fromJson(Map<String, dynamic> json) => DailyResponse(
+  factory InspeksiResponse.fromJson(Map<String, dynamic> json) =>
+      InspeksiResponse(
         id: json["id"],
-        name: json["name"],
         lokasi: json["lokasi"],
-        jenisTreatment: json["jenis_treatment"],
-        hamaDitemukan: json["hama_ditemukan"],
-        jumlah: json["jumlah"],
+        rekomendasi: json["rekomendasi"],
         tanggal: json["tanggal"],
         buktiFoto: json["bukti_foto"],
         keterangan: json["keterangan"],
@@ -46,11 +38,8 @@ class DailyResponse {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
         "lokasi": lokasi,
-        "jenis_treatment": jenisTreatment,
-        "hama_ditemukan": hamaDitemukan,
-        "jumlah": jumlah,
+        "rekomendasi": rekomendasi,
         "tanggal": tanggal,
         "bukti_foto": buktiFoto,
         "keterangan": keterangan,
@@ -58,15 +47,11 @@ class DailyResponse {
         "updatedAt": updatedAt.toIso8601String(),
         "createdAt": createdAt.toIso8601String(),
       };
-
-  DailyEntity toEntity() {
-    return DailyEntity(
+  InspeksiEntity toEntity() {
+    return InspeksiEntity(
       id: id,
-      name: name,
       lokasi: lokasi,
-      jenisTreatment: jenisTreatment,
-      hamaDitemukan: hamaDitemukan,
-      jumlah: jumlah,
+      rekomendasi: rekomendasi,
       tanggal: tanggal,
       buktiFoto: buktiFoto,
       keterangan: keterangan,

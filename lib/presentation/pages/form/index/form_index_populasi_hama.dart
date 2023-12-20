@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
+import 'package:hama_app/domain/entities/index/index_hama_request.dart';
+import 'package:hama_app/presentation/bloc/index_hama/index_hama_bloc.dart';
+import 'package:hama_app/presentation/pages/form/index/list_index_hama_page.dart';
+import 'package:hama_app/presentation/widget/widget_snackbar.dart';
 
 class FormIndexPopulasiHama extends StatefulWidget {
   static const routeName = 'index-populasi-form';
   static const path = 'index-populasi-form';
-  const FormIndexPopulasiHama({super.key});
+  final String noOrder;
+  const FormIndexPopulasiHama({
+    super.key,
+    required this.noOrder,
+  });
 
   @override
   State<FormIndexPopulasiHama> createState() => _FormIndexPopulasiHamaState();
 }
 
 class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
+  TextEditingController locationController = TextEditingController();
+  TextEditingController jenisHamaController = TextEditingController();
+  TextEditingController indeksController = TextEditingController();
   List<String> listStatus = ['Terkendali', 'Tidak Terkendali'];
   String? status;
   DateTime? dateSelected;
@@ -22,7 +35,7 @@ class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime.now());
     if (picked != null && picked != dateSelected) {
       setState(() {
         dateSelected = picked;
@@ -131,7 +144,7 @@ class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
                   ),
                 ),
                 TextFormField(
-                  // controller: emailContr,
+                  controller: jenisHamaController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     fillColor: whiteColor,
@@ -162,8 +175,8 @@ class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
                   ),
                 ),
                 TextFormField(
-                  // controller: emailContr,
-                  keyboardType: TextInputType.text,
+                  controller: indeksController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     fillColor: whiteColor,
                     filled: true,
@@ -219,25 +232,46 @@ class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
           SizedBox(
             height: 30.h,
           ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: SizedBox(
-              height: 55.h,
-              width: 1.sw,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(darkColor),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(23.0),
+          BlocListener<IndexHamaBloc, IndexHamaState>(
+            listener: (context, state) {
+              if (state is AddIndexHamaSuccess) {
+                context.goNamed(ListIndexHamaPage.routeName,
+                    extra: widget.noOrder);
+              }
+              if (state is IndexHamaFailed) {
+                widgetsnackbar(context, state.message, redColor);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: SizedBox(
+                height: 55.h,
+                width: 1.sw,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(darkColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(23.0),
+                      ),
                     ),
                   ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  'SIMPAN',
-                  style: whiteTextStyle.copyWith(
-                    fontSize: 16.sp,
+                  onPressed: () {
+                    final indexHamaRequest = IndexHamaRequest(
+                        lokasi: locationController.text,
+                        jenisHama: jenisHamaController.text,
+                        indeksPopulasi: int.parse(indeksController.text),
+                        tanggal: TextUtils().dateFormatInt(dateSelected),
+                        status: status!);
+                    context.read<IndexHamaBloc>().add(FetchAddIndexHama(
+                        indexHamaRequest: indexHamaRequest,
+                        noOrder: widget.noOrder));
+                  },
+                  child: Text(
+                    'SIMPAN',
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 16.sp,
+                    ),
                   ),
                 ),
               ),

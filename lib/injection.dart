@@ -2,26 +2,43 @@ import 'package:get_it/get_it.dart';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:hama_app/data/datasource/daily/daily_remote_data_source.dart';
+import 'package:hama_app/data/datasource/index/index_hama_remote_data_source.dart';
+import 'package:hama_app/data/datasource/inspeksi/inspeksi_remote_data_source.dart';
 import 'package:hama_app/data/datasource/order/order_remote_data_source.dart';
 import 'package:hama_app/data/datasource/pemakaian/pemakaian_remote_data_source.dart';
 import 'package:hama_app/data/datasource/peralatan/peralatan_remote_data_source.dart';
 import 'package:hama_app/data/datasource/personal/personal_remote_data_source.dart';
 import 'package:hama_app/data/repositories/auth_repository_impl.dart';
 import 'package:hama_app/data/repositories/daily_repository_impl.dart';
+import 'package:hama_app/data/repositories/index_hama_repository_impl.dart';
+import 'package:hama_app/data/repositories/inspeksi_repository_impl.dart';
 import 'package:hama_app/data/repositories/order_repository_impl.dart';
 import 'package:hama_app/data/repositories/pemakaian_repository_impl.dart';
 import 'package:hama_app/data/repositories/peralatan_repository_impl.dart';
 import 'package:hama_app/data/repositories/personal_repository_impl.dart';
 import 'package:hama_app/domain/repositories/auth_repository.dart';
 import 'package:hama_app/domain/repositories/daily_repository.dart';
+import 'package:hama_app/domain/repositories/index_hama_repository.dart';
+import 'package:hama_app/domain/repositories/inspeksi_repository.dart';
 import 'package:hama_app/domain/repositories/order_repository.dart';
 import 'package:hama_app/domain/repositories/pemakaian_repository.dart';
 import 'package:hama_app/domain/repositories/peralatan_repository.dart';
 import 'package:hama_app/domain/repositories/personal_repository.dart';
 import 'package:hama_app/domain/usecase/daily/add_daily_usecase.dart';
+import 'package:hama_app/domain/usecase/daily/get_all_daily_by_date_usecase.dart';
+import 'package:hama_app/domain/usecase/daily/get_all_daily_by_month_usecase.dart';
+import 'package:hama_app/domain/usecase/daily/get_all_daily_usecase.dart';
 import 'package:hama_app/domain/usecase/get_all_data_order.dart';
 import 'package:hama_app/domain/usecase/get_create_order.dart';
 import 'package:hama_app/domain/usecase/get_login.dart';
+import 'package:hama_app/domain/usecase/index_hama/add_index_hama_usecase.dart';
+import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_by_MOnth_usecase.dart';
+import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_by_date_usecase.dart';
+import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/add_inspeksi_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_date_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_month_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/add_pemakaian_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_month.dart';
@@ -41,6 +58,8 @@ import 'package:hama_app/domain/usecase/personel/logout_usecase.dart';
 import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/bloc/dailiy/daily_bloc.dart';
+import 'package:hama_app/presentation/bloc/index_hama/index_hama_bloc.dart';
+import 'package:hama_app/presentation/bloc/inspeksi/inspeksi_bloc.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
 import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
@@ -64,6 +83,10 @@ void init() {
       () => PemakaianRemoteDataSourceImpl(client: locator()));
   locator.registerLazySingleton<DailyRemoteDataSource>(
       () => DailyRemoteDataSourceImpl(client: locator()));
+  locator.registerLazySingleton<InspeksiRemoteDataSource>(
+      () => InspeksiRemoteDataSourceImpl(client: locator()));
+  locator.registerLazySingleton<IndexHamaRemoteDataSource>(
+      () => IndexHamaRemoteDataSourceImpl(client: locator()));
 
 //repository
   locator.registerLazySingleton<AuthRepository>(
@@ -78,6 +101,10 @@ void init() {
       () => PemakaianRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<DailyRepository>(
       () => DailyRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<InspeksiRepository>(
+      () => InspeksiRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<IndexHamaRepository>(
+      () => IndexhamaRepositoryImpl(remoteDataSource: locator()));
 
 //usecase
   locator.registerLazySingleton(() => GetLogin(locator()));
@@ -105,6 +132,19 @@ void init() {
   locator.registerLazySingleton(() => GetAllPemakaianByMonthUsecase(locator()));
 
   locator.registerLazySingleton(() => AddDailyUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllDailyUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllDailyByDateUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllDailyByMonthUsecase(locator()));
+
+  locator.registerLazySingleton(() => AddInspeksiUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllInspeksiUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllInspeksiByDateUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllInspeksiByMonthUsecase(locator()));
+
+  locator.registerLazySingleton(() => AddIndexHamaUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllIndexHamaUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllIndexHamaByDateUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllIndexHamaByMonthUsecase(locator()));
 
   //bloc
 
@@ -137,7 +177,29 @@ void init() {
         getAllPeralatanByDateUsecase: locator(),
       ));
 
-  locator.registerFactory(() => DailyBloc(addDailyUsecase: locator()));
+  locator.registerFactory(
+    () => DailyBloc(
+      addDailyUsecase: locator(),
+      getAllDailyUsecase: locator(),
+      getAllDailyByDateUsecase: locator(),
+      getAllDailyByMonthUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(
+    () => InspeksiBloc(
+      addInspeksiUsecase: locator(),
+      getAllInspeksiUsecase: locator(),
+      getAllInspeksiByDateUsecase: locator(),
+      getAllInspeksiByMonthUsecase: locator(),
+    ),
+  );
+
+  locator.registerFactory(() => IndexHamaBloc(
+      addIndexHamaUsecase: locator(),
+      getAllIndexHamaUsecase: locator(),
+      getAllIndexHamaByMonthUsecase: locator(),
+      getAllIndexHamaByDateUsecase: locator()));
 
 //external
   locator.registerLazySingleton(() => http.Client());

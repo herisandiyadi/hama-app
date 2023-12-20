@@ -1,12 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-class DailyEntity extends Equatable {
+class InspeksiEntity extends Equatable {
   final int id;
-  final String name;
   final String lokasi;
-  final String jenisTreatment;
-  final String hamaDitemukan;
-  final int jumlah;
+  final String rekomendasi;
   final String tanggal;
   final String buktiFoto;
   final String keterangan;
@@ -14,13 +11,10 @@ class DailyEntity extends Equatable {
   final DateTime updatedAt;
   final DateTime createdAt;
 
-  DailyEntity({
+  InspeksiEntity({
     required this.id,
-    required this.name,
     required this.lokasi,
-    required this.jenisTreatment,
-    required this.hamaDitemukan,
-    required this.jumlah,
+    required this.rekomendasi,
     required this.tanggal,
     required this.buktiFoto,
     required this.keterangan,
@@ -33,11 +27,8 @@ class DailyEntity extends Equatable {
   // TODO: implement props
   List<Object?> get props => [
         id,
-        name,
         lokasi,
-        jenisTreatment,
-        hamaDitemukan,
-        jumlah,
+        rekomendasi,
         tanggal,
         buktiFoto,
         keterangan,

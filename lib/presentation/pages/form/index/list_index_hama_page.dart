@@ -3,27 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
-import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
-import 'package:hama_app/presentation/bloc/dailiy/daily_bloc.dart';
+import 'package:hama_app/presentation/bloc/index_hama/index_hama_bloc.dart';
 import 'package:hama_app/presentation/pages/form/daily/form_daily_activity.dart';
+import 'package:hama_app/presentation/pages/form/index/form_index_populasi_hama.dart';
 import 'package:hama_app/presentation/widget/widget_loading_circle.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-class ListDailyActivityPage extends StatefulWidget {
-  static const routeName = 'list-daily-activities-page';
-  static const path = 'list-daily-activities-page';
+class ListIndexHamaPage extends StatefulWidget {
+  static const routeName = 'list-index-hama-page';
+  static const path = 'list-index-hama-page';
   final String noOrder;
-  const ListDailyActivityPage({
+  const ListIndexHamaPage({
     Key? key,
     required this.noOrder,
   }) : super(key: key);
 
   @override
-  State<ListDailyActivityPage> createState() => _ListDailyActivityPageState();
+  State<ListIndexHamaPage> createState() => _ListIndexHamaPageState();
 }
 
-class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
+class _ListIndexHamaPageState extends State<ListIndexHamaPage> {
   final List<String> listSearch = ['by Date', 'by Month'];
   String? searchCategories;
   DateTime? dateSelected;
@@ -32,8 +32,8 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
   void initState() {
     super.initState();
     Future.microtask(() => context
-        .read<DailyBloc>()
-        .add(FetchGetAllDaily(noOrder: widget.noOrder)));
+        .read<IndexHamaBloc>()
+        .add(FetchGetAllIndexHama(noOrder: widget.noOrder)));
   }
 
   Future<void> selectedDate() async {
@@ -69,7 +69,7 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
         child: Scaffold(
       appBar: AppBar(
         backgroundColor: greenColor,
-        title: const Text('List Daily Activity'),
+        title: const Text('List Index Hama'),
       ),
       body: Column(
         children: [
@@ -91,11 +91,11 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                       ),
                     ),
                     onPressed: () {
-                      context.goNamed(FormDailyActivity.routeName,
+                      context.goNamed(FormIndexPopulasiHama.routeName,
                           extra: widget.noOrder);
                     },
                     child: Text(
-                      'Tambah Form Daily',
+                      'Tambah Form Indeks',
                       style: whiteTextStyle.copyWith(
                         fontSize: 14.sp,
                       ),
@@ -187,8 +187,8 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                               MaterialStateProperty.all(greyColor)),
                       onPressed: searchCategories == 'by Date'
                           ? () {
-                              context.read<DailyBloc>().add(
-                                  FetchGetAllDailyByDate(
+                              context.read<IndexHamaBloc>().add(
+                                  FetchGetAllByDateIndexHama(
                                       noOrder: widget.noOrder,
                                       date: TextUtils()
                                           .dateFormatInt(dateSelected)));
@@ -197,8 +197,8 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                               ? () {
                                   final year = dateSelected!.year;
                                   final month = dateSelected!.month;
-                                  context.read<DailyBloc>().add(
-                                      FetchGetAllDailyByMonth(
+                                  context.read<IndexHamaBloc>().add(
+                                      FetchGetAllByMonthIndexHama(
                                           noOrder: widget.noOrder,
                                           year: year.toString(),
                                           month: month.toString()));
@@ -216,16 +216,16 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
           ),
           SizedBox(
             height: 1.sh - 250.h,
-            child: BlocBuilder<DailyBloc, DailyState>(
+            child: BlocBuilder<IndexHamaBloc, IndexHamaState>(
               builder: (context, state) {
-                if (state is GetAllDailySuccess) {
-                  if (state.listDailyEntity.data.isEmpty) {
+                if (state is GetAllIndexHamaSuccess) {
+                  if (state.listIndexHamaEntity.data.isEmpty) {
                     return const Center(child: Text('Data Kosong'));
                   } else {
                     return ListView.builder(
-                      itemCount: state.listDailyEntity.data.length,
+                      itemCount: state.listIndexHamaEntity.data.length,
                       itemBuilder: (context, index) {
-                        final data = state.listDailyEntity.data[index];
+                        final data = state.listIndexHamaEntity.data[index];
                         return Padding(
                           padding: const EdgeInsets.all(10),
                           child: Container(
@@ -237,16 +237,8 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
                                 style: ListTileStyle.drawer,
-                                leading: SizedBox(
-                                  height: 160.h,
-                                  width: 80.w,
-                                  child: Image.network(
-                                    '$imageUrl/${data.buktiFoto}',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
                                 title: Text(
-                                  'Jenis Treatment : ${data.jenisTreatment}',
+                                  'Lokasi : ${data.lokasi}',
                                   style:
                                       darkTextStyle.copyWith(fontSize: 18.sp),
                                 ),
@@ -254,7 +246,7 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Hama ditemukan : ${data.hamaDitemukan}',
+                                      'Jenis Hama : ${data.jenisHama}',
                                       style: darkTextStyle.copyWith(
                                           fontSize: 14.sp),
                                     ),
@@ -262,22 +254,29 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                                       width: 10.w,
                                     ),
                                     Text(
-                                      'berjumlah: ${data.jumlah}',
+                                      'Index Populasi: ${data.indeksPopulasi}',
                                       style: darkTextStyle.copyWith(
                                           fontSize: 14.sp),
                                     ),
-                                    Text(
-                                      'Lokasi : ${data.lokasi}',
-                                      style: darkTextStyle.copyWith(
-                                          fontSize: 14.sp),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Status : ',
+                                          style: darkTextStyle.copyWith(
+                                              fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          data.status,
+                                          style: data.status == 'Terkendali'
+                                              ? greenTextStyle.copyWith(
+                                                  fontSize: 14.sp)
+                                              : redTextSytle.copyWith(
+                                                  fontSize: 14.sp),
+                                        ),
+                                      ],
                                     ),
                                     Text(
-                                      'Keterangan : ${data.keterangan}',
-                                      style: darkTextStyle.copyWith(
-                                          fontSize: 14.sp),
-                                    ),
-                                    Text(
-                                      'Tanggal : ${data.tanggal}',
+                                      'Tanggal: ${TextUtils().dateFormatId(data.tanggal)}',
                                       style: darkTextStyle.copyWith(
                                           fontSize: 10.sp),
                                     )
@@ -291,17 +290,17 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                     );
                   }
                 }
-                if (state is DailyLoading) {
+                if (state is IndexHamaLoading) {
                   return const Center(
                     child: CircleProgress(),
                   );
                 }
-                if (state is DailyFailed) {
+                if (state is IndexHamaFailed) {
                   return Center(
                     child: Text(state.message),
                   );
                 }
-                return SizedBox();
+                return const SizedBox();
               },
             ),
           ),

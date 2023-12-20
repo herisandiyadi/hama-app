@@ -8,9 +8,11 @@ import 'package:hama_app/presentation/pages/auth/login_page.dart';
 import 'package:hama_app/presentation/pages/content/order_page.dart';
 import 'package:hama_app/presentation/pages/form/daily/list_daily_activity_page.dart';
 import 'package:hama_app/presentation/pages/form/dashboard_form.dart';
-import 'package:hama_app/presentation/pages/form/form_daily_activity.dart';
-import 'package:hama_app/presentation/pages/form/form_index_populasi_hama.dart';
-import 'package:hama_app/presentation/pages/form/form_inspeksi_akses_hama.dart';
+import 'package:hama_app/presentation/pages/form/daily/form_daily_activity.dart';
+import 'package:hama_app/presentation/pages/form/index/form_index_populasi_hama.dart';
+import 'package:hama_app/presentation/pages/form/index/list_index_hama_page.dart';
+import 'package:hama_app/presentation/pages/form/inspeksi/form_inspeksi_akses_hama.dart';
+import 'package:hama_app/presentation/pages/form/inspeksi/list_inspeksi_hama_page.dart';
 import 'package:hama_app/presentation/pages/form/pemakaian/form_monitoring_pemakaian.dart';
 import 'package:hama_app/presentation/pages/form/pemakaian/list_monitoring_pemakaian_page.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
@@ -137,6 +139,24 @@ class AppRouter {
                                             noOrder: extras);
                                       }),
                                   GoRoute(
+                                      path: ListInspeksiHamaPage.path,
+                                      name: ListInspeksiHamaPage.routeName,
+                                      builder: (context, state) {
+                                        final extras = state.extra as String;
+
+                                        return ListInspeksiHamaPage(
+                                            noOrder: extras);
+                                      }),
+                                  GoRoute(
+                                      path: ListIndexHamaPage.path,
+                                      name: ListIndexHamaPage.routeName,
+                                      builder: (context, state) {
+                                        final extras = state.extra as String;
+
+                                        return ListIndexHamaPage(
+                                            noOrder: extras);
+                                      }),
+                                  GoRoute(
                                       path: FormMonitoringPeralatan.path,
                                       name: FormMonitoringPeralatan.routeName,
                                       builder: (context, state) {
@@ -168,19 +188,20 @@ class AppRouter {
                                       path: FormInspeksiAksesHama.path,
                                       name: FormInspeksiAksesHama.routeName,
                                       builder: (context, state) {
-                                        return FormInspeksiAksesHama();
+                                        final extras = state.extra as String;
+
+                                        return FormInspeksiAksesHama(
+                                          noOrder: extras,
+                                        );
                                       }),
                                   GoRoute(
                                       path: FormIndexPopulasiHama.path,
                                       name: FormIndexPopulasiHama.routeName,
                                       builder: (context, state) {
-                                        return FormIndexPopulasiHama();
-                                      }),
-                                  GoRoute(
-                                      path: ListDataFormPage.path,
-                                      name: ListDataFormPage.routeName,
-                                      builder: (context, state) {
-                                        return ListDataFormPage();
+                                        final extras = state.extra as String;
+                                        return FormIndexPopulasiHama(
+                                          noOrder: extras,
+                                        );
                                       }),
                                 ]),
                           ]),

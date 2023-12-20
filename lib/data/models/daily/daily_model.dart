@@ -1,7 +1,6 @@
 import 'package:hama_app/domain/entities/daily/daily_request.dart';
 
 class DailyModel {
-  final String name;
   final String lokasi;
   final String jenisTreatment;
   final String hamaDitemukan;
@@ -11,7 +10,6 @@ class DailyModel {
   final String buktiFoto;
 
   DailyModel({
-    required this.name,
     required this.lokasi,
     required this.jenisTreatment,
     required this.hamaDitemukan,
@@ -22,7 +20,6 @@ class DailyModel {
   });
 
   factory DailyModel.fromJson(Map<String, dynamic> json) => DailyModel(
-        name: json["name"],
         lokasi: json["lokasi"],
         jenisTreatment: json["jenis_treatment"],
         hamaDitemukan: json["hama_ditemukan"],
@@ -33,7 +30,6 @@ class DailyModel {
       );
 
   factory DailyModel.fromEntity(DailyRequest daily) => DailyModel(
-        name: daily.name,
         lokasi: daily.lokasi,
         jenisTreatment: daily.jenisTreatment,
         hamaDitemukan: daily.hamaDitemukan,
@@ -44,7 +40,6 @@ class DailyModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
         "lokasi": lokasi,
         "jenis_treatment": jenisTreatment,
         "hama_ditemukan": hamaDitemukan,
@@ -55,7 +50,6 @@ class DailyModel {
       };
   DailyRequest toEntity() {
     return DailyRequest(
-      name: name,
       lokasi: lokasi,
       jenisTreatment: jenisTreatment,
       hamaDitemukan: hamaDitemukan,

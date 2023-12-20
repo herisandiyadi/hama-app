@@ -1,54 +1,50 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
-import 'package:hama_app/data/models/daily/list_daily_response.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/exceptions.dart';
-import 'package:hama_app/data/models/daily/daily_model.dart';
-import 'package:hama_app/data/models/daily/daily_response.dart';
+import 'package:hama_app/data/models/inspeksi/inspeksi_model.dart';
+import 'package:hama_app/data/models/inspeksi/inspeksi_response.dart';
+import 'package:hama_app/data/models/inspeksi/list_inspeksi_response.dart';
+import 'package:http/http.dart' as http;
 
-abstract class DailyRemoteDataSource {
-  Future<DailyResponse> addFormDaily(DailyModel dailyModel, String noOrder);
-  Future<ListDailyResponse> getAllDaily(String noOrder);
-  Future<ListDailyResponse> getAllDailyByDate(String noOrder, String tanggal);
-  Future<ListDailyResponse> getAllDailyByMonth(
+abstract class InspeksiRemoteDataSource {
+  Future<InspeksiResponse> addFormInspeksi(
+      InspeksiModel inspeksiModel, String noOrder);
+  Future<ListInspeksiResponse> getAllInspeksi(String noOrder);
+  Future<ListInspeksiResponse> getAllInspeksiByDate(
+      String noOrder, String date);
+  Future<ListInspeksiResponse> getAllInspeksiByMonth(
       String noOrder, String year, String month);
 }
 
-class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
+class InspeksiRemoteDataSourceImpl implements InspeksiRemoteDataSource {
   final http.Client client;
 
-  DailyRemoteDataSourceImpl({
-    required this.client,
-  });
+  InspeksiRemoteDataSourceImpl({required this.client});
   @override
-  Future<DailyResponse> addFormDaily(
-      DailyModel dailyModel, String noOrder) async {
+  Future<InspeksiResponse> addFormInspeksi(
+      InspeksiModel inspeksiModel, String noOrder) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {'Authorization': '$token'};
 
     final request = http.MultipartRequest(
-        'POST', Uri.parse('$baseUrl/api/daily/add/$noOrder'));
+        'POST', Uri.parse('$baseUrl/api/inspeksi/add/$noOrder'));
     request.fields.addAll({
-      'lokasi': dailyModel.lokasi,
-      'jenis_treatment': dailyModel.jenisTreatment,
-      'hama_ditemukan': dailyModel.hamaDitemukan,
-      'jumlah': dailyModel.jumlah.toString(),
-      'tanggal': dailyModel.tanggal,
-      'keterangan': dailyModel.keterangan
+      "lokasi": inspeksiModel.lokasi,
+      "rekomendasi": inspeksiModel.rekomendasi,
+      "tanggal": inspeksiModel.tanggal,
+      "keterangan": inspeksiModel.keterangan
     });
-    request.files.add(
-        await http.MultipartFile.fromPath('bukti_foto', dailyModel.buktiFoto));
+    request.files.add(await http.MultipartFile.fromPath(
+        'bukti_foto', inspeksiModel.buktiFoto));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     final json = jsonDecode(await response.stream.bytesToString());
     if (response.statusCode == 201) {
-      final jsonResponse = DailyResponse.fromJson(json);
+      final jsonResponse = InspeksiResponse.fromJson(json);
 
       return jsonResponse;
     } else {
@@ -57,19 +53,20 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
   }
 
   @override
-  Future<ListDailyResponse> getAllDaily(String noOrder) async {
+  Future<ListInspeksiResponse> getAllInspeksi(String noOrder) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': '$token'
     };
+
     final response = await client.get(
-      Uri.parse('$baseUrl/api/daily/getall/$noOrder'),
+      Uri.parse('$baseUrl/api/inspeksi/getall/$noOrder'),
       headers: headers,
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
-      final jsonResponse = ListDailyResponse.fromJson(json);
+      final jsonResponse = ListInspeksiResponse.fromJson(json);
 
       return jsonResponse;
     } else {
@@ -78,20 +75,21 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
   }
 
   @override
-  Future<ListDailyResponse> getAllDailyByDate(
-      String noOrder, String tanggal) async {
+  Future<ListInspeksiResponse> getAllInspeksiByDate(
+      String noOrder, String date) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': '$token'
     };
+
     final response = await client.get(
-      Uri.parse('$baseUrl/api/daily/getall/$noOrder/$tanggal'),
+      Uri.parse('$baseUrl/api/inspeksi/getall/$noOrder/$date'),
       headers: headers,
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
-      final jsonResponse = ListDailyResponse.fromJson(json);
+      final jsonResponse = ListInspeksiResponse.fromJson(json);
 
       return jsonResponse;
     } else {
@@ -100,20 +98,21 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
   }
 
   @override
-  Future<ListDailyResponse> getAllDailyByMonth(
+  Future<ListInspeksiResponse> getAllInspeksiByMonth(
       String noOrder, String year, String month) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': '$token'
     };
+
     final response = await client.get(
-      Uri.parse('$baseUrl/api/daily/getall/$noOrder/$year/$month'),
+      Uri.parse('$baseUrl/api/inspeksi/getall/$noOrder/$year/$month'),
       headers: headers,
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
-      final jsonResponse = ListDailyResponse.fromJson(json);
+      final jsonResponse = ListInspeksiResponse.fromJson(json);
 
       return jsonResponse;
     } else {
