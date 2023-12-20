@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'absen_bloc.dart';
 
 abstract class AbsenEvent extends Equatable {
@@ -24,5 +25,26 @@ class FetchAbsenPerson extends AbsenEvent {
   List<Object> get props => [
         noOrder,
         id,
+      ];
+}
+
+class FetchAbsenPersonByMonth extends AbsenEvent {
+  final String noOrder;
+  final String id;
+  final String year;
+  final String month;
+
+  const FetchAbsenPersonByMonth({
+    required this.noOrder,
+    required this.id,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        id,
+        year,
+        month,
       ];
 }

@@ -65,7 +65,7 @@ class _ListOrderPageState extends State<ListOrderPage> {
                         return CardOrder(
                           onPressed: () => context.goNamed(
                             OrderPage.routeName,
-                            extra: data.noOrder,
+                            extra: {'noOrder': data.noOrder},
                           ),
                           noOrder: data.noOrder,
                           clientName: data.clientName,

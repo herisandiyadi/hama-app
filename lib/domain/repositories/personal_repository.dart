@@ -16,4 +16,6 @@ abstract class PersonalRepository {
       String noOrder, String id);
   Future<Either<Failure, DataAbsenEntity>> getAbsenByDate(
       String noOrder, String date);
+  Future<Either<Failure, DataAbsenEntity>> getAbsenPersonByMonth(
+      String noOrder, String id, String year, String month);
 }

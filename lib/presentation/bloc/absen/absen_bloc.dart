@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hama_app/domain/entities/personal/absen_request.dart';
 import 'package:hama_app/domain/entities/personal/data_absen_entity.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_id.dart';
+import 'package:hama_app/domain/usecase/personel/get_absen_person_by_month.dart';
 import 'package:hama_app/domain/usecase/personel/get_add_absen.dart';
 
 part 'absen_event.dart';
@@ -13,9 +14,11 @@ part 'absen_state.dart';
 class AbsenBloc extends Bloc<AbsenEvent, AbsenState> {
   final GetAddAbsen getAddAbsen;
   final GetAbsenById getAbsenById;
+  final GetAbsenPersonByMonth getAbsenPersonByMonth;
   AbsenBloc({
     required this.getAddAbsen,
     required this.getAbsenById,
+    required this.getAbsenPersonByMonth,
   }) : super(AbsenInitial()) {
     on<AddAbsenEvent>((event, emit) async {
       final result = await getAddAbsen.execute(event.absenRequest);
@@ -25,6 +28,13 @@ class AbsenBloc extends Bloc<AbsenEvent, AbsenState> {
     });
     on<FetchAbsenPerson>((event, emit) async {
       final result = await getAbsenById.execute(event.noOrder, event.id);
+      result.fold((failure) {
+        emit(AbsenFailed(message: failure.message));
+      }, (success) => emit(GetAbsenSuccess(dataAbsenEntity: success)));
+    });
+    on<FetchAbsenPersonByMonth>((event, emit) async {
+      final result = await getAbsenPersonByMonth.execute(
+          event.noOrder, event.id, event.year, event.month);
       result.fold((failure) {
         emit(AbsenFailed(message: failure.message));
       }, (success) => emit(GetAbsenSuccess(dataAbsenEntity: success)));

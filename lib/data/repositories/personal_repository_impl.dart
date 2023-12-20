@@ -104,4 +104,22 @@ class PersonalRepositoryImpl implements PersonalRepository {
       return const Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
+
+  @override
+  Future<Either<Failure, DataAbsenEntity>> getAbsenPersonByMonth(
+      String noOrder, String id, String year, String month) async {
+    try {
+      final result = await remoteDataSource.getAbsenPersonByMonth(
+        noOrder,
+        id,
+        year,
+        month,
+      );
+      return Right(result.toEntity());
+    } on MessageException catch (e) {
+      return Left(MessageFailure(e.message));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
 }

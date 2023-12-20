@@ -26,20 +26,20 @@ class OrderPage extends StatelessWidget {
             IconHomeWidget(
               icon: Icons.assignment_add,
               label: 'Personel',
-              onPressed: () =>
-                  context.goNamed(PersonelPage.routeName, extra: noOrder),
+              onPressed: () => context
+                  .goNamed(PersonelPage.routeName, extra: {'noOrder': noOrder}),
             ),
             IconHomeWidget(
               icon: Icons.assignment,
               label: 'Absen',
-              onPressed: () =>
-                  context.goNamed(AbsenPage.routeName, extra: noOrder),
+              onPressed: () => context
+                  .goNamed(AbsenPage.routeName, extra: {'noOrder': noOrder}),
             ),
             IconHomeWidget(
               icon: Icons.assignment,
               label: 'Form',
-              onPressed: () =>
-                  context.goNamed(DashboardFormPage.routeName, extra: noOrder),
+              onPressed: () => context.goNamed(DashboardFormPage.routeName,
+                  extra: {'noOrder': noOrder}),
             ),
           ],
         ),

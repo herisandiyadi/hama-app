@@ -15,6 +15,8 @@ abstract class PersonalRemoteDataSource {
   Future<String> deletePersonal(String noOrder, String id);
   Future<String> addAbsen(AbsenModel absenModel);
   Future<DataAbsenResponse> getAbsenByDate(String noOrder, String date);
+  Future<DataAbsenResponse> getAbsenPersonByMonth(
+      String noOrder, String id, String year, String month);
   Future<DataAbsenResponse> getAbsenById(String noOrder, String id);
 }
 
@@ -125,7 +127,6 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
       headers: headers,
       body: body,
     );
-    print(response.body);
 
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -166,12 +167,35 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
     };
 
     final response = await client.get(
-      Uri.parse('$baseUrl/api/personel/absen/getall/$noOrder/$id'),
+      Uri.parse('$baseUrl/api/personel/absen/name/$noOrder/$id'),
       headers: headers,
     );
 
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
+      final jsonResponse = DataAbsenResponse.fromJson(json);
+      return jsonResponse;
+    } else {
+      throw MessageException(json['message']);
+    }
+  }
+
+  @override
+  Future<DataAbsenResponse> getAbsenPersonByMonth(
+      String noOrder, String id, String year, String month) async {
+    final token = await CacheUtil.getString(cacheToken);
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': '$token'
+    };
+
+    final response = await client.get(
+      Uri.parse('$baseUrl/api/personel/absen/name/$noOrder/$id/$year/$month'),
+      headers: headers,
+    );
+    print('$baseUrl/api/personel/absen/name/$noOrder/$id/$year/$month');
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 201) {
       final jsonResponse = DataAbsenResponse.fromJson(json);
       return jsonResponse;
     } else {

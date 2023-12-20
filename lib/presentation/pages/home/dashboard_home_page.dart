@@ -82,7 +82,7 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        Text(fullName!),
+                        Text(fullName),
                       ],
                     ),
                   ),
@@ -221,7 +221,9 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
               icon: Icons.assignment,
               label: 'List Order',
               onPressed: () {
-                context.goNamed(ListOrderPage.routeName);
+                context.goNamed(
+                  ListOrderPage.routeName,
+                );
               },
             ),
           ],

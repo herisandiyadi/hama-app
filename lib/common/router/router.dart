@@ -16,7 +16,6 @@ import 'package:hama_app/presentation/pages/form/inspeksi/list_inspeksi_hama_pag
 import 'package:hama_app/presentation/pages/form/pemakaian/form_monitoring_pemakaian.dart';
 import 'package:hama_app/presentation/pages/form/pemakaian/list_monitoring_pemakaian_page.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
-import 'package:hama_app/presentation/pages/form/list_data_form.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/home/list_order_page.dart';
 import 'package:hama_app/presentation/pages/home_page.dart';
@@ -63,9 +62,9 @@ class AppRouter {
                           path: OrderPage.path,
                           name: OrderPage.routeName,
                           builder: (context, state) {
-                            final extras = state.extra as String;
+                            final extras = state.extra as Map<String, dynamic>;
                             return OrderPage(
-                              noOrder: extras,
+                              noOrder: extras['noOrder'],
                             );
                           },
                           routes: [
@@ -73,39 +72,46 @@ class AppRouter {
                                 path: PersonelPage.path,
                                 name: PersonelPage.routeName,
                                 builder: (context, state) {
-                                  final extras = state.extra as String;
-                                  return PersonelPage(
-                                    noOrder: extras,
-                                  );
-                                }),
-                            GoRoute(
-                                path: DetailPersonalAbsen.path,
-                                name: DetailPersonalAbsen.routeName,
-                                builder: (context, state) {
                                   final extras =
                                       state.extra as Map<String, dynamic>;
-
-                                  return DetailPersonalAbsen(
+                                  return PersonelPage(
                                     noOrder: extras['noOrder'],
-                                    id: extras['id'],
                                   );
                                 }),
                             GoRoute(
                                 path: AbsenPage.path,
                                 name: AbsenPage.routeName,
                                 builder: (context, state) {
-                                  final extras = state.extra as String;
+                                  final extras =
+                                      state.extra as Map<String, dynamic>;
                                   return AbsenPage(
-                                    noOrder: extras,
+                                    noOrder: extras['noOrder'],
                                   );
-                                }),
+                                },
+                                routes: [
+                                  GoRoute(
+                                      path: DetailPersonalAbsen.path,
+                                      name: DetailPersonalAbsen.routeName,
+                                      builder: (context, state) {
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
+
+                                        return DetailPersonalAbsen(
+                                          noOrder: extras['noOrder'],
+                                          id: extras['id'],
+                                          name: extras['name'],
+                                        );
+                                      }),
+                                ]),
                             GoRoute(
                                 path: DashboardFormPage.path,
                                 name: DashboardFormPage.routeName,
                                 builder: (context, state) {
-                                  final extras = state.extra as String;
+                                  final extras =
+                                      state.extra as Map<String, dynamic>;
+
                                   return DashboardFormPage(
-                                    noOrder: extras,
+                                    noOrder: extras['noOrder'],
                                   );
                                 },
                                 routes: [
@@ -114,93 +120,103 @@ class AppRouter {
                                       name:
                                           ListMonitoringPeralatanPage.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return ListMonitoringPeralatanPage(
-                                            noOrder: extras);
+                                            noOrder: extras['noOrder']);
                                       }),
                                   GoRoute(
                                       path: ListMonitoringPemakaianPage.path,
                                       name:
                                           ListMonitoringPemakaianPage.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return ListMonitoringPemakaianPage(
-                                            noOrder: extras);
+                                            noOrder: extras['noOrder']);
                                       }),
                                   GoRoute(
                                       path: ListDailyActivityPage.path,
                                       name: ListDailyActivityPage.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return ListDailyActivityPage(
-                                            noOrder: extras);
+                                            noOrder: extras['noOrder']);
                                       }),
                                   GoRoute(
                                       path: ListInspeksiHamaPage.path,
                                       name: ListInspeksiHamaPage.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return ListInspeksiHamaPage(
-                                            noOrder: extras);
+                                            noOrder: extras['noOrder']);
                                       }),
                                   GoRoute(
                                       path: ListIndexHamaPage.path,
                                       name: ListIndexHamaPage.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return ListIndexHamaPage(
-                                            noOrder: extras);
+                                            noOrder: extras['noOrder']);
                                       }),
                                   GoRoute(
                                       path: FormMonitoringPeralatan.path,
                                       name: FormMonitoringPeralatan.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return FormMonitoringPeralatan(
-                                          noOrder: extras,
+                                          noOrder: extras['noOrder'],
                                         );
                                       }),
                                   GoRoute(
                                       path: FormMonitoringPemakaian.path,
                                       name: FormMonitoringPemakaian.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
                                         return FormMonitoringPemakaian(
-                                          noOrder: extras,
+                                          noOrder: extras['noOrder'],
                                         );
                                       }),
                                   GoRoute(
                                       path: FormDailyActivity.path,
                                       name: FormDailyActivity.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
                                         return FormDailyActivity(
-                                          noOrder: extras,
+                                          noOrder: extras['noOrder'],
                                         );
                                       }),
                                   GoRoute(
                                       path: FormInspeksiAksesHama.path,
                                       name: FormInspeksiAksesHama.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
 
                                         return FormInspeksiAksesHama(
-                                          noOrder: extras,
+                                          noOrder: extras['noOrder'],
                                         );
                                       }),
                                   GoRoute(
                                       path: FormIndexPopulasiHama.path,
                                       name: FormIndexPopulasiHama.routeName,
                                       builder: (context, state) {
-                                        final extras = state.extra as String;
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
                                         return FormIndexPopulasiHama(
-                                          noOrder: extras,
+                                          noOrder: extras['noOrder'],
                                         );
                                       }),
                                 ]),
