@@ -6,6 +6,7 @@ import 'package:hama_app/injection.dart' as di;
 import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
+import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
 import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.locator<PersonelBloc>()),
         BlocProvider(create: (context) => di.locator<AbsenBloc>()),
         BlocProvider(create: (context) => di.locator<PeralatanBloc>()),
+        BlocProvider(create: (context) => di.locator<PemakaianBloc>()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(430, 932),

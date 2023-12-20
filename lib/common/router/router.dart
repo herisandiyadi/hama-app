@@ -6,11 +6,13 @@ import 'package:hama_app/presentation/pages/absen/absen_page.dart';
 import 'package:hama_app/presentation/pages/absen/detail_personal_absen.dart';
 import 'package:hama_app/presentation/pages/auth/login_page.dart';
 import 'package:hama_app/presentation/pages/content/order_page.dart';
+import 'package:hama_app/presentation/pages/form/daily/list_daily_activity_page.dart';
 import 'package:hama_app/presentation/pages/form/dashboard_form.dart';
 import 'package:hama_app/presentation/pages/form/form_daily_activity.dart';
 import 'package:hama_app/presentation/pages/form/form_index_populasi_hama.dart';
 import 'package:hama_app/presentation/pages/form/form_inspeksi_akses_hama.dart';
-import 'package:hama_app/presentation/pages/form/form_monitoring_pemakaian.dart';
+import 'package:hama_app/presentation/pages/form/pemakaian/form_monitoring_pemakaian.dart';
+import 'package:hama_app/presentation/pages/form/pemakaian/list_monitoring_pemakaian_page.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/form/list_data_form.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
@@ -116,6 +118,25 @@ class AppRouter {
                                             noOrder: extras);
                                       }),
                                   GoRoute(
+                                      path: ListMonitoringPemakaianPage.path,
+                                      name:
+                                          ListMonitoringPemakaianPage.routeName,
+                                      builder: (context, state) {
+                                        final extras = state.extra as String;
+
+                                        return ListMonitoringPemakaianPage(
+                                            noOrder: extras);
+                                      }),
+                                  GoRoute(
+                                      path: ListDailyActivityPage.path,
+                                      name: ListDailyActivityPage.routeName,
+                                      builder: (context, state) {
+                                        final extras = state.extra as String;
+
+                                        return ListDailyActivityPage(
+                                            noOrder: extras);
+                                      }),
+                                  GoRoute(
                                       path: FormMonitoringPeralatan.path,
                                       name: FormMonitoringPeralatan.routeName,
                                       builder: (context, state) {
@@ -129,13 +150,19 @@ class AppRouter {
                                       path: FormMonitoringPemakaian.path,
                                       name: FormMonitoringPemakaian.routeName,
                                       builder: (context, state) {
-                                        return FormMonitoringPemakaian();
+                                        final extras = state.extra as String;
+                                        return FormMonitoringPemakaian(
+                                          noOrder: extras,
+                                        );
                                       }),
                                   GoRoute(
                                       path: FormDailyActivity.path,
                                       name: FormDailyActivity.routeName,
                                       builder: (context, state) {
-                                        return FormDailyActivity();
+                                        final extras = state.extra as String;
+                                        return FormDailyActivity(
+                                          noOrder: extras,
+                                        );
                                       }),
                                   GoRoute(
                                       path: FormInspeksiAksesHama.path,

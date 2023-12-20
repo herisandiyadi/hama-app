@@ -1,31 +1,28 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
-import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
-import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
+import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
+import 'package:hama_app/presentation/pages/form/form_daily_activity.dart';
 import 'package:hama_app/presentation/widget/widget_loading_circle.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-class ListMonitoringPeralatanPage extends StatefulWidget {
-  static const routeName = 'monitoring-tools-page';
-  static const path = 'monitoring-tools-page';
+class ListDailyActivityPage extends StatefulWidget {
+  static const routeName = 'list-daily-activities-page';
+  static const path = 'list-daily-activities-page';
   final String noOrder;
-  const ListMonitoringPeralatanPage({
+  const ListDailyActivityPage({
     Key? key,
     required this.noOrder,
   }) : super(key: key);
 
   @override
-  State<ListMonitoringPeralatanPage> createState() =>
-      _ListMonitoringPeralatanPageState();
+  State<ListDailyActivityPage> createState() => _ListDailyActivityPageState();
 }
 
-class _ListMonitoringPeralatanPageState
-    extends State<ListMonitoringPeralatanPage> {
+class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
   final List<String> listSearch = ['by Date', 'by Month'];
   String? searchCategories;
   DateTime? dateSelected;
@@ -33,9 +30,9 @@ class _ListMonitoringPeralatanPageState
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context
-        .read<PeralatanBloc>()
-        .add(FetchAllPeralatan(noOrder: widget.noOrder)));
+    // Future.microtask(() => context
+    //     .read<PemakaianBloc>()
+    //     .add(FetchGetAllPemakaian(noOrder: widget.noOrder)));
   }
 
   Future<void> selectedDate() async {
@@ -67,12 +64,11 @@ class _ListMonitoringPeralatanPageState
 
   @override
   Widget build(BuildContext context) {
-    print(dateSelected);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
         backgroundColor: greenColor,
-        title: const Text('List Monitoring Peralatan'),
+        title: const Text('List Daily Activity'),
       ),
       body: Column(
         children: [
@@ -94,11 +90,11 @@ class _ListMonitoringPeralatanPageState
                       ),
                     ),
                     onPressed: () {
-                      context.goNamed(FormMonitoringPeralatan.routeName,
+                      context.goNamed(FormDailyActivity.routeName,
                           extra: widget.noOrder);
                     },
                     child: Text(
-                      'Tambah Form Peralatan',
+                      'Tambah Form Daily',
                       style: whiteTextStyle.copyWith(
                         fontSize: 14.sp,
                       ),
@@ -190,21 +186,21 @@ class _ListMonitoringPeralatanPageState
                               MaterialStateProperty.all(greyColor)),
                       onPressed: searchCategories == 'by Date'
                           ? () {
-                              context.read<PeralatanBloc>().add(
-                                  FetchPeralatanByDate(
-                                      noOrder: widget.noOrder,
-                                      date: TextUtils()
-                                          .dateFormatInt(dateSelected)));
+                              // context.read<PemakaianBloc>().add(
+                              //     FetchGetAllbyDatePemakaian(
+                              //         noOrder: widget.noOrder,
+                              //         date: TextUtils()
+                              //             .dateFormatInt(dateSelected)));
                             }
                           : searchCategories == 'by Month'
                               ? () {
                                   final year = dateSelected!.year;
                                   final month = dateSelected!.month;
-                                  context.read<PeralatanBloc>().add(
-                                      FetchAllPeralatanByMonth(
-                                          noOrder: widget.noOrder,
-                                          year: year.toString(),
-                                          month: month.toString()));
+                                  // context.read<PemakaianBloc>().add(
+                                  //     FetchGetAllbyMonthPemakaian(
+                                  //         noOrder: widget.noOrder,
+                                  //         year: year.toString(),
+                                  //         month: month.toString()));
                                 }
                               : null,
                       child: const Center(
@@ -219,16 +215,16 @@ class _ListMonitoringPeralatanPageState
           ),
           SizedBox(
             height: 1.sh - 250.h,
-            child: BlocBuilder<PeralatanBloc, PeralatanState>(
+            child: BlocBuilder<PemakaianBloc, PemakaianState>(
               builder: (context, state) {
-                if (state is GetALlPeralatanSuccess) {
-                  if (state.listPeralatanEntity.data.isEmpty) {
+                if (state is GetAllPemakaianSuccess) {
+                  if (state.listPemakaianEntity.data.isEmpty) {
                     return const Center(child: Text('Data Kosong'));
                   } else {
                     return ListView.builder(
-                      itemCount: state.listPeralatanEntity.data.length,
+                      itemCount: state.listPemakaianEntity.data.length,
                       itemBuilder: (context, index) {
-                        final data = state.listPeralatanEntity.data[index];
+                        final data = state.listPemakaianEntity.data[index];
                         return Padding(
                           padding: const EdgeInsets.all(10),
                           child: Container(
@@ -240,24 +236,10 @@ class _ListMonitoringPeralatanPageState
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
                                 style: ListTileStyle.drawer,
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      data.name,
-                                      style: darkTextStyle.copyWith(
-                                          fontSize: 18.sp),
-                                    ),
-                                    Text(
-                                      'Kondisi ${data.kondisi}',
-                                      style: data.kondisi == 'Baik'
-                                          ? greenTextStyle.copyWith(
-                                              fontSize: 14.sp)
-                                          : redTextSytle.copyWith(
-                                              fontSize: 14.sp),
-                                    ),
-                                  ],
+                                title: Text(
+                                  data.name,
+                                  style:
+                                      darkTextStyle.copyWith(fontSize: 18.sp),
                                 ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,18 +247,38 @@ class _ListMonitoringPeralatanPageState
                                     Row(
                                       children: [
                                         Text(
-                                          'Merk : ${data.merek}',
+                                          'Merk : ${data.merk}',
                                           style: darkTextStyle.copyWith(
                                               fontSize: 14.sp),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(
-                                          'Jumlah : ${data.jumlah} ${data.satuan}',
+                                          'Bahan Aktif : ${data.bahanAktif}',
                                           style: darkTextStyle.copyWith(
                                               fontSize: 14.sp),
                                         ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                            'Stok Awal : ${data.stokAwal} ${data.satuan}'),
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        Text(
+                                            'Stok Akhir : ${data.stokAkhir} ${data.satuanb}')
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text('Barang Masuk : ${data.ins}'),
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        Text('Barang Keluar : ${data.out} ')
                                       ],
                                     ),
                                     Text('Tanggal : ${data.tanggal}')
@@ -290,12 +292,12 @@ class _ListMonitoringPeralatanPageState
                     );
                   }
                 }
-                if (state is PeralatanLoading) {
-                  return Center(
+                if (state is PemakaianLoading) {
+                  return const Center(
                     child: CircleProgress(),
                   );
                 }
-                if (state is PeralatanFailed) {
+                if (state is PemakaianFailed) {
                   return Center(
                     child: Text(state.message),
                   );

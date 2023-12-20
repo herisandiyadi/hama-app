@@ -1,33 +1,61 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FormDailyActivity extends StatefulWidget {
   static const routeName = 'daily_activity-form';
   static const path = 'daily_activity-form';
-  const FormDailyActivity({super.key});
+  final String noOrder;
+  const FormDailyActivity({super.key, required this.noOrder});
 
   @override
   State<FormDailyActivity> createState() => _FormDailyActivityState();
 }
 
 class _FormDailyActivityState extends State<FormDailyActivity> {
-  List<String> jenisTreatment = [];
+  TextEditingController locationController = TextEditingController();
+  TextEditingController hamaDitemukanController = TextEditingController();
+  TextEditingController jumlahController = TextEditingController();
+  TextEditingController keteranganController = TextEditingController();
+  List<String> jenisTreatment = [
+    'Monitoring & Spraying',
+    'Mekanik',
+    'Thermal Fogging',
+    'Baiting(Baiting Gel)',
+    'Rodent Control(Umpan racun)',
+    'Larvaciding',
+    'Monitoring Trapping',
+    'Cold Fogging',
+    'Misting',
+    'Lainnya'
+  ];
   String? treatment;
   DateTime? dateSelected;
+  List<XFile> _listImagePaths = [];
+  ImagePicker picker = ImagePicker();
 
   Future<void> selectedDate() async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime.now());
     if (picked != null && picked != dateSelected) {
       setState(() {
         dateSelected = picked;
       });
     }
+  }
+
+  void imagePick() async {
+    final result = await picker.pickMultiImage(imageQuality: 50);
+    setState(() {
+      _listImagePaths = result;
+    });
   }
 
   @override
@@ -100,7 +128,7 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                     ),
                   ),
                   TextFormField(
-                    // controller: emailContr,
+                    controller: locationController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       fillColor: whiteColor,
@@ -167,7 +195,7 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                     ),
                   ),
                   TextFormField(
-                    // controller: emailContr,
+                    controller: hamaDitemukanController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       fillColor: whiteColor,
@@ -198,7 +226,7 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                     ),
                   ),
                   TextFormField(
-                    // controller: emailContr,
+                    controller: jumlahController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       fillColor: whiteColor,
@@ -230,52 +258,40 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                   padding: const EdgeInsets.all(10.0),
                   child: Wrap(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: const BoxDecoration(color: greyColor),
-                        ),
+                      Wrap(
+                        children: _listImagePaths.map((e) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8, bottom: 8),
+                            child: Container(
+                                height: 80.h,
+                                width: 80.w,
+                                decoration:
+                                    const BoxDecoration(color: whiteColor),
+                                child: Image.file(
+                                  File(
+                                    e.path,
+                                  ),
+                                  fit: BoxFit.cover,
+                                )),
+                          );
+                        }).toList(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: BoxDecoration(color: greyColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: BoxDecoration(color: greyColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: BoxDecoration(color: greyColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: BoxDecoration(color: greyColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80.h,
-                          width: 80.w,
-                          decoration: BoxDecoration(color: greyColor),
+                      GestureDetector(
+                        onTap: () {
+                          imagePick();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 80.h,
+                            width: 80.w,
+                            decoration: const BoxDecoration(color: blueColor),
+                            child: const Icon(
+                              Icons.add,
+                              color: whiteColor,
+                              size: 48,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -299,7 +315,7 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                     ),
                   ),
                   TextFormField(
-                    // controller: emailContr,
+                    controller: keteranganController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       fillColor: whiteColor,
