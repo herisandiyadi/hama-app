@@ -4,7 +4,7 @@ class DailyModel {
   final String lokasi;
   final String jenisTreatment;
   final String hamaDitemukan;
-  final int jumlah;
+  final String jumlah;
   final String tanggal;
   final String keterangan;
   final String buktiFoto;

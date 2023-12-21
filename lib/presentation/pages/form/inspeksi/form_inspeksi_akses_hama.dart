@@ -53,11 +53,57 @@ class _FormInspeksiAksesHamaState extends State<FormInspeksiAksesHama> {
     }
   }
 
-  void imagePick() async {
+  void galleryPick() async {
     final result = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
       pickImage = result;
     });
+  }
+
+  void cameraPick() async {
+    final result = await picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      pickImage = result;
+    });
+  }
+
+  void showModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          // Adjust the height as needed
+          height: 200.0,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  'Gallery',
+                  style:
+                      darkTextStyle.copyWith(fontSize: 16.sp, fontWeight: bold),
+                ),
+                onTap: () {
+                  galleryPick();
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Camera',
+                  style:
+                      darkTextStyle.copyWith(fontSize: 16.sp, fontWeight: bold),
+                ),
+                onTap: () {
+                  cameraPick();
+                  Navigator.pop(context);
+                },
+              ),
+              // Add more list tiles as needed
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -183,7 +229,7 @@ class _FormInspeksiAksesHamaState extends State<FormInspeksiAksesHama> {
                             : const SizedBox(),
                         GestureDetector(
                           onTap: () {
-                            imagePick();
+                            showModal(context);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),

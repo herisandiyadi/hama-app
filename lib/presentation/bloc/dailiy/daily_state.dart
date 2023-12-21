@@ -20,7 +20,7 @@ final class DailyFailed extends DailyState {
 }
 
 final class AddDailySuccess extends DailyState {
-  final DailyEntity dailyEntity;
+  final String dailyEntity;
 
   const AddDailySuccess({required this.dailyEntity});
 

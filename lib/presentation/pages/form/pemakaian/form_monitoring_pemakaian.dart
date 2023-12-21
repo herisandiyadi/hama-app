@@ -35,7 +35,6 @@ class _FormMonitoringPemakaianState extends State<FormMonitoringPemakaian> {
     'Racun tikus',
     'Larvasida',
     'Pestisida cair',
-    'Pestisida cair',
     'Gel Semut',
     'Gel Kecoa',
     'Cockroach Trap',

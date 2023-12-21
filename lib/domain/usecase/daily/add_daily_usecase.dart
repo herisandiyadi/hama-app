@@ -9,7 +9,7 @@ class AddDailyUsecase {
 
   AddDailyUsecase(this.repository);
 
-  Future<Either<Failure, DailyEntity>> execute(
+  Future<Either<Failure, String>> execute(
       DailyRequest dailyRequest, String noOrder) {
     final response = repository.addFormDaily(dailyRequest, noOrder);
     return response;

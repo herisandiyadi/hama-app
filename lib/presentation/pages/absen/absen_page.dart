@@ -29,7 +29,8 @@ class AbsenPage extends StatefulWidget {
 class _AbsenPageState extends State<AbsenPage> with RouteAware {
   TextEditingController namePersonelController = TextEditingController();
   DateTime? dates;
-  List<bool> isSelected = [];
+  // List<bool> isSelected = [];
+  List<bool> isSelected = List.generate(4, (index) => false);
 
   Future<void> datePicker() async {
     final DateTime? picked = await showDatePicker(
@@ -82,6 +83,7 @@ class _AbsenPageState extends State<AbsenPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    print(isSelected);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -276,9 +278,14 @@ class _AbsenPageState extends State<AbsenPage> with RouteAware {
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    greenColor)),
+                                                    isSelected[index]
+                                                        ? greyColor
+                                                        : greenColor)),
                                         onPressed: () {
                                           if (validate()) {
+                                            setState(() {
+                                              isSelected[index] = true;
+                                            });
                                             context
                                                 .read<AbsenBloc>()
                                                 .add(AddAbsenEvent(

@@ -5,7 +5,7 @@ import 'package:hama_app/domain/entities/daily/daily_request.dart';
 import 'package:hama_app/domain/entities/daily/list_daily_entity.dart';
 
 abstract class DailyRepository {
-  Future<Either<Failure, DailyEntity>> addFormDaily(
+  Future<Either<Failure, String>> addFormDaily(
       DailyRequest dailyRequest, String noOrder);
   Future<Either<Failure, ListDailyEntity>> getAllDaily(String noOrder);
   Future<Either<Failure, ListDailyEntity>> getAllDailyByDate(

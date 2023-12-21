@@ -2,7 +2,6 @@ import 'package:hama_app/domain/entities/daily/daily_entity.dart';
 
 class DailyResponse {
   final int id;
-  final String name;
   final String lokasi;
   final String jenisTreatment;
   final String hamaDitemukan;
@@ -16,7 +15,6 @@ class DailyResponse {
 
   DailyResponse({
     required this.id,
-    required this.name,
     required this.lokasi,
     required this.jenisTreatment,
     required this.hamaDitemukan,
@@ -29,24 +27,24 @@ class DailyResponse {
     required this.createdAt,
   });
 
-  factory DailyResponse.fromJson(Map<String, dynamic> json) => DailyResponse(
-        id: json["id"],
-        name: json["name"],
-        lokasi: json["lokasi"],
-        jenisTreatment: json["jenis_treatment"],
-        hamaDitemukan: json["hama_ditemukan"],
-        jumlah: json["jumlah"],
-        tanggal: json["tanggal"],
-        buktiFoto: json["bukti_foto"],
-        keterangan: json["keterangan"],
-        noOrder: json["no_order"],
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        createdAt: DateTime.parse(json["createdAt"]),
-      );
+  factory DailyResponse.fromJson(Map<String, dynamic> json) {
+    return DailyResponse(
+      id: json["id"],
+      lokasi: json["lokasi"],
+      jenisTreatment: json["jenis_treatment"],
+      hamaDitemukan: json["hama_ditemukan"],
+      jumlah: json["jumlah"],
+      tanggal: json["tanggal"],
+      buktiFoto: json["bukti_foto"],
+      keterangan: json["keterangan"],
+      noOrder: json["no_order"],
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      createdAt: DateTime.parse(json["createdAt"]),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
         "lokasi": lokasi,
         "jenis_treatment": jenisTreatment,
         "hama_ditemukan": hamaDitemukan,
@@ -62,7 +60,6 @@ class DailyResponse {
   DailyEntity toEntity() {
     return DailyEntity(
       id: id,
-      name: name,
       lokasi: lokasi,
       jenisTreatment: jenisTreatment,
       hamaDitemukan: hamaDitemukan,

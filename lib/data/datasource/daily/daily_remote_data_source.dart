@@ -11,7 +11,7 @@ import 'package:hama_app/data/models/daily/daily_model.dart';
 import 'package:hama_app/data/models/daily/daily_response.dart';
 
 abstract class DailyRemoteDataSource {
-  Future<DailyResponse> addFormDaily(DailyModel dailyModel, String noOrder);
+  Future<String> addFormDaily(DailyModel dailyModel, String noOrder);
   Future<ListDailyResponse> getAllDaily(String noOrder);
   Future<ListDailyResponse> getAllDailyByDate(String noOrder, String tanggal);
   Future<ListDailyResponse> getAllDailyByMonth(
@@ -25,8 +25,7 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
     required this.client,
   });
   @override
-  Future<DailyResponse> addFormDaily(
-      DailyModel dailyModel, String noOrder) async {
+  Future<String> addFormDaily(DailyModel dailyModel, String noOrder) async {
     final token = await CacheUtil.getString(cacheToken);
     final headers = {'Authorization': '$token'};
 
@@ -36,7 +35,7 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
       'lokasi': dailyModel.lokasi,
       'jenis_treatment': dailyModel.jenisTreatment,
       'hama_ditemukan': dailyModel.hamaDitemukan,
-      'jumlah': dailyModel.jumlah.toString(),
+      'jumlah': dailyModel.jumlah,
       'tanggal': dailyModel.tanggal,
       'keterangan': dailyModel.keterangan
     });
@@ -45,12 +44,11 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-
     final json = jsonDecode(await response.stream.bytesToString());
-    if (response.statusCode == 201) {
-      final jsonResponse = DailyResponse.fromJson(json);
 
-      return jsonResponse;
+    if (response.statusCode == 201) {
+      // final jsonResponse = DailyResponse.fromJson(json);
+      return json['message'];
     } else {
       throw MessageException(json['message']);
     }

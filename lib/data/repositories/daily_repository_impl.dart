@@ -15,12 +15,12 @@ class DailyRepositoryImpl implements DailyRepository {
 
   DailyRepositoryImpl({required this.remoteDataSource});
   @override
-  Future<Either<Failure, DailyEntity>> addFormDaily(
+  Future<Either<Failure, String>> addFormDaily(
       DailyRequest dailyRequest, String noOrder) async {
     try {
       final result = await remoteDataSource.addFormDaily(
           DailyModel.fromEntity(dailyRequest), noOrder);
-      return Right(result.toEntity());
+      return Right(result);
     } on MessageException catch (e) {
       return Left(MessageFailure(e.message));
     } on SocketException {
