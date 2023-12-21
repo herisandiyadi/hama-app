@@ -93,7 +93,7 @@ class _ListMonitoringPemakaianPageState
                     ),
                     onPressed: () {
                       context.goNamed(FormMonitoringPemakaian.routeName,
-                          extra: widget.noOrder);
+                          extra: {'noOrder': widget.noOrder});
                     },
                     child: Text(
                       'Tambah Pemakaian',

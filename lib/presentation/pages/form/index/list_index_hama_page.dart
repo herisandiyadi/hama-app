@@ -92,7 +92,7 @@ class _ListIndexHamaPageState extends State<ListIndexHamaPage> {
                     ),
                     onPressed: () {
                       context.goNamed(FormIndexPopulasiHama.routeName,
-                          extra: widget.noOrder);
+                          extra: {'noOrder': widget.noOrder});
                     },
                     child: Text(
                       'Tambah Form Indeks',

@@ -95,7 +95,7 @@ class _ListMonitoringPeralatanPageState
                     ),
                     onPressed: () {
                       context.goNamed(FormMonitoringPeralatan.routeName,
-                          extra: widget.noOrder);
+                          extra: {'noOrder': widget.noOrder});
                     },
                     child: Text(
                       'Tambah Form Peralatan',

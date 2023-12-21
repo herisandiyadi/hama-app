@@ -92,7 +92,7 @@ class _ListInspeksiHamaPageState extends State<ListInspeksiHamaPage> {
                     ),
                     onPressed: () {
                       context.goNamed(FormInspeksiAksesHama.routeName,
-                          extra: widget.noOrder);
+                          extra: {'noOrder': widget.noOrder});
                     },
                     child: Text(
                       'Tambah Form Inspeksi',

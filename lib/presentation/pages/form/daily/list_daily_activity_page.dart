@@ -92,7 +92,7 @@ class _ListDailyActivityPageState extends State<ListDailyActivityPage> {
                     ),
                     onPressed: () {
                       context.goNamed(FormDailyActivity.routeName,
-                          extra: widget.noOrder);
+                          extra: {'noOrder': widget.noOrder});
                     },
                     child: Text(
                       'Tambah Form Daily',
