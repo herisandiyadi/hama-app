@@ -352,7 +352,7 @@ class _FormDailyActivityState extends State<FormDailyActivity> {
                 listener: (context, state) {
                   if (state is AddDailySuccess) {
                     context.goNamed(ListDailyActivityPage.routeName,
-                        extra: widget.noOrder);
+                        extra: {'noOrder': widget.noOrder});
                   }
                   if (state is DailyFailed) {
                     widgetsnackbar(context, state.message, redColor);

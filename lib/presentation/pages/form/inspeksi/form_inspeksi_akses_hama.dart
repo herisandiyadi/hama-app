@@ -274,7 +274,7 @@ class _FormInspeksiAksesHamaState extends State<FormInspeksiAksesHama> {
                 listener: (context, state) {
                   if (state is AddInspeksiSuccess) {
                     context.goNamed(ListInspeksiHamaPage.routeName,
-                        extra: widget.noOrder);
+                        extra: {'noOrder': widget.noOrder});
                   }
                   if (state is InspeksiFailed) {
                     widgetsnackbar(context, state.message, redColor);

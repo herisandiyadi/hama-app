@@ -424,7 +424,7 @@ class _FormMonitoringPemakaianState extends State<FormMonitoringPemakaian> {
                 listener: (context, state) {
                   if (state is AddPemakaianSuccess) {
                     context.goNamed(ListMonitoringPemakaianPage.routeName,
-                        extra: widget.noOrder);
+                        extra: {'noOrder': widget.noOrder});
                   }
                 },
                 child: Padding(

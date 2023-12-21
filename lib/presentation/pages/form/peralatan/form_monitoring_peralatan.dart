@@ -332,7 +332,7 @@ class _FormMonitoringPeralatanState extends State<FormMonitoringPeralatan> {
                 listener: (context, state) {
                   if (state is AddPeralatanSuccess) {
                     context.goNamed(ListMonitoringPeralatanPage.routeName,
-                        extra: widget.noOrder);
+                        extra: {'noOrder': widget.noOrder});
                   }
                 },
                 child: Padding(

@@ -236,7 +236,7 @@ class _FormIndexPopulasiHamaState extends State<FormIndexPopulasiHama> {
             listener: (context, state) {
               if (state is AddIndexHamaSuccess) {
                 context.goNamed(ListIndexHamaPage.routeName,
-                    extra: widget.noOrder);
+                    extra: {'noOrder': widget.noOrder});
               }
               if (state is IndexHamaFailed) {
                 widgetsnackbar(context, state.message, redColor);
