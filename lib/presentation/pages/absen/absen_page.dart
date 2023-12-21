@@ -256,90 +256,89 @@ class _AbsenPageState extends State<AbsenPage> with RouteAware {
                                 //       widgetsnackbar(
                                 //           context, state.message, redColor);
                                 //     }
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  isSelected[index]
-                                                      ? greyColor
-                                                      : greenColor)),
-                                      onPressed: isSelected[index]
-                                          ? null
-                                          : () {
-                                              if (validate()) {
-                                                context.read<AbsenBloc>().add(
-                                                        AddAbsenEvent(
-                                                            absenRequest:
-                                                                AbsenRequest(
-                                                      idPerson: data[index]
-                                                          .id
-                                                          .toString(),
-                                                      tanggal: TextUtils()
-                                                          .dateFormatInt(dates),
-                                                      keterangan: 'Hadir',
-                                                      noOrder: widget.noOrder,
-                                                    )));
-                                                setState(() {
-                                                  isSelected[index] = true;
-                                                  // print(isSelected[index]);
-                                                });
-                                              } else {
-                                                widgetsnackbar(
-                                                    context,
-                                                    'Tanggal belum di set',
-                                                    redColor);
-                                              }
-                                            },
-                                      child: Text(
-                                        'Hadir',
-                                        style: whiteTextStyle.copyWith(
-                                            fontSize: 11.sp),
+                                BlocListener<AbsenBloc, AbsenState>(
+                                  listener: (context, state) {
+                                    if (state is AddAbsenSuccess) {
+                                      widgetsnackbar(
+                                          context, state.message, greenColor);
+                                    }
+
+                                    if (state is AbsenFailed) {
+                                      widgetsnackbar(
+                                          context, state.message, redColor);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    greenColor)),
+                                        onPressed: () {
+                                          if (validate()) {
+                                            context
+                                                .read<AbsenBloc>()
+                                                .add(AddAbsenEvent(
+                                                    absenRequest: AbsenRequest(
+                                                  idPerson:
+                                                      data[index].id.toString(),
+                                                  tanggal: TextUtils()
+                                                      .dateFormatInt(dates),
+                                                  keterangan: 'Hadir',
+                                                  noOrder: widget.noOrder,
+                                                )));
+                                          } else {
+                                            widgetsnackbar(
+                                                context,
+                                                'Tanggal belum di set',
+                                                redColor);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Hadir',
+                                          style: whiteTextStyle.copyWith(
+                                              fontSize: 11.sp),
+                                        ),
                                       ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  isSelected[index]
-                                                      ? greyColor
-                                                      : redColor)),
-                                      onPressed: isSelected[index]
-                                          ? null
-                                          : () {
-                                              if (validate()) {
-                                                context.read<AbsenBloc>().add(
-                                                        AddAbsenEvent(
-                                                            absenRequest:
-                                                                AbsenRequest(
-                                                      idPerson: data[index]
-                                                          .id
-                                                          .toString(),
-                                                      tanggal: TextUtils()
-                                                          .dateFormatInt(dates),
-                                                      keterangan: 'Tidak Hadir',
-                                                      noOrder: widget.noOrder,
-                                                    )));
-                                                setState(() {
-                                                  isSelected[index] = true;
-                                                });
-                                              } else {
-                                                widgetsnackbar(
-                                                    context,
-                                                    'Tanggal belum di set',
-                                                    redColor);
-                                              }
-                                            },
-                                      child: Text(
-                                        'Tidak Hadir',
-                                        style: whiteTextStyle.copyWith(
-                                            fontSize: 11.sp),
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    redColor)),
+                                        onPressed: () {
+                                          if (validate()) {
+                                            context
+                                                .read<AbsenBloc>()
+                                                .add(AddAbsenEvent(
+                                                    absenRequest: AbsenRequest(
+                                                  idPerson:
+                                                      data[index].id.toString(),
+                                                  tanggal: TextUtils()
+                                                      .dateFormatInt(dates),
+                                                  keterangan: 'Tidak Hadir',
+                                                  noOrder: widget.noOrder,
+                                                )));
+                                            setState(() {
+                                              isSelected[index] = true;
+                                            });
+                                          } else {
+                                            widgetsnackbar(
+                                                context,
+                                                'Tanggal belum di set',
+                                                redColor);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Tidak Hadir',
+                                          style: whiteTextStyle.copyWith(
+                                              fontSize: 11.sp),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ]);
                             }),

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/router/router.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
+import 'package:hama_app/presentation/pages/absen/detail_personal_absen.dart';
 import 'package:hama_app/presentation/widget/widget_loading_circle.dart';
 
 import 'package:hama_app/common/style/style.dart';
@@ -409,7 +410,15 @@ class _PersonelPageState extends State<PersonelPage> with RouteAware {
                                             color: blueColor,
                                           )),
                                       IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            context.goNamed(
+                                                DetailPersonalAbsen.routeName,
+                                                extra: {
+                                                  'name': data[index].name,
+                                                  'noOrder': widget.noOrder,
+                                                  'id': data[index].id
+                                                });
+                                          },
                                           icon: const Icon(
                                             Icons.visibility,
                                             color: greenColor,

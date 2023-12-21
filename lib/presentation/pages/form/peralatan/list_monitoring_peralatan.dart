@@ -67,7 +67,6 @@ class _ListMonitoringPeralatanPageState
 
   @override
   Widget build(BuildContext context) {
-    print(dateSelected);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(

@@ -193,7 +193,6 @@ class PersnoalRemoteDataSourceImpl implements PersonalRemoteDataSource {
       Uri.parse('$baseUrl/api/personel/absen/name/$noOrder/$id/$year/$month'),
       headers: headers,
     );
-    print('$baseUrl/api/personel/absen/name/$noOrder/$id/$year/$month');
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
       final jsonResponse = DataAbsenResponse.fromJson(json);
