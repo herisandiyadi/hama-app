@@ -7,6 +7,7 @@ import 'package:hama_app/common/router/router.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
 import 'package:hama_app/domain/entities/personal/absen_request.dart';
+import 'package:hama_app/domain/entities/personal/personal_entity.dart';
 import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
 import 'package:hama_app/presentation/pages/absen/detail_personal_absen.dart';
@@ -29,8 +30,9 @@ class AbsenPage extends StatefulWidget {
 class _AbsenPageState extends State<AbsenPage> with RouteAware {
   TextEditingController namePersonelController = TextEditingController();
   DateTime? dates;
-  // List<bool> isSelected = [];
-  List<bool> isSelected = List.generate(4, (index) => false);
+  int? indexAbsen;
+  List<bool> isSelected = List.generate(20, (index) => false);
+  List<String> status = List.generate(20, (index) => '');
 
   Future<void> datePicker() async {
     final DateTime? picked = await showDatePicker(
@@ -83,7 +85,123 @@ class _AbsenPageState extends State<AbsenPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    print(isSelected);
+    TableRow dataTable(int index, PersonalEntity data, int length) {
+      return TableRow(
+        children: [
+          Center(
+            child: Text(
+              '${index + 1}',
+              style: darkTextStyle.copyWith(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => context.goNamed(DetailPersonalAbsen.routeName, extra: {
+              'name': data.name,
+              'noOrder': widget.noOrder,
+              'id': data.id
+            }),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                data.name,
+                overflow: TextOverflow.ellipsis,
+                style: darkTextStyle.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ),
+
+          // if (state is AddAbsenSuccess) {
+          //       widgetsnackbar(
+          //           context, state.message, greenColor);
+          //     }
+
+          //     if (state is AbsenFailed) {
+          //       widgetsnackbar(
+          //           context, state.message, redColor);
+          //     }
+          BlocListener<AbsenBloc, AbsenState>(
+            listener: (context, state) {
+              if (state is AbsenFailed) {
+                widgetsnackbar(context, state.message, redColor);
+              }
+            },
+            child: status[index] != ''
+                ? Center(
+                    child: Text(
+                      status[index],
+                      style: status[index] == 'Tidak Hadir'
+                          ? redTextSytle.copyWith(fontSize: 14.sp)
+                          : greenTextStyle.copyWith(fontSize: 14.sp),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(greenColor)),
+                        onPressed: () {
+                          if (validate()) {
+                            setState(() {
+                              isSelected[index] = true;
+                              status[index] = 'Hadir';
+                            });
+                            context.read<AbsenBloc>().add(AddAbsenEvent(
+                                    absenRequest: AbsenRequest(
+                                  idPerson: data.id.toString(),
+                                  tanggal: TextUtils().dateFormatInt(dates),
+                                  keterangan: 'Hadir',
+                                  noOrder: widget.noOrder,
+                                )));
+                          } else {
+                            widgetsnackbar(
+                                context, 'Tanggal belum di set', redColor);
+                          }
+                        },
+                        child: Text(
+                          'Hadir',
+                          style: whiteTextStyle.copyWith(fontSize: 11.sp),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(redColor)),
+                        onPressed: () {
+                          if (validate()) {
+                            setState(() {
+                              isSelected[index] = true;
+                              status[index] = 'Tidak Hadir';
+                            });
+                            context.read<AbsenBloc>().add(AddAbsenEvent(
+                                    absenRequest: AbsenRequest(
+                                  idPerson: data.id.toString(),
+                                  tanggal: TextUtils().dateFormatInt(dates),
+                                  keterangan: 'Tidak Hadir',
+                                  noOrder: widget.noOrder,
+                                )));
+                          } else {
+                            widgetsnackbar(
+                                context, 'Tanggal belum di set', redColor);
+                          }
+                        },
+                        child: Text(
+                          'Tidak Hadir',
+                          style: whiteTextStyle.copyWith(fontSize: 11.sp),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      );
+    }
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -216,139 +334,15 @@ class _AbsenPageState extends State<AbsenPage> with RouteAware {
                                 width: 1.0.w, color: Colors.black),
                             defaultVerticalAlignment:
                                 TableCellVerticalAlignment.middle,
-                            children: List.generate(data.length, (index) {
-                              isSelected = List.generate(
-                                  data.length, (index) => false,
-                                  growable: true);
-                              return TableRow(children: [
-                                Center(
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: darkTextStyle.copyWith(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () => context.goNamed(
-                                      DetailPersonalAbsen.routeName,
-                                      extra: {
-                                        'name': data[index].name,
-                                        'noOrder': widget.noOrder,
-                                        'id': data[index].id
-                                      }),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      data[index].name,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: darkTextStyle.copyWith(
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                            children: List.generate(
+                              data.length,
+                              (index) {
+                                final dataPersonel = data[index];
 
-                                // if (state is AddAbsenSuccess) {
-                                //       widgetsnackbar(
-                                //           context, state.message, greenColor);
-                                //     }
-
-                                //     if (state is AbsenFailed) {
-                                //       widgetsnackbar(
-                                //           context, state.message, redColor);
-                                //     }
-                                BlocListener<AbsenBloc, AbsenState>(
-                                  listener: (context, state) {
-                                    if (state is AddAbsenSuccess) {
-                                      widgetsnackbar(
-                                          context, state.message, greenColor);
-                                    }
-
-                                    if (state is AbsenFailed) {
-                                      widgetsnackbar(
-                                          context, state.message, redColor);
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    isSelected[index]
-                                                        ? greyColor
-                                                        : greenColor)),
-                                        onPressed: () {
-                                          if (validate()) {
-                                            setState(() {
-                                              isSelected[index] = true;
-                                            });
-                                            context
-                                                .read<AbsenBloc>()
-                                                .add(AddAbsenEvent(
-                                                    absenRequest: AbsenRequest(
-                                                  idPerson:
-                                                      data[index].id.toString(),
-                                                  tanggal: TextUtils()
-                                                      .dateFormatInt(dates),
-                                                  keterangan: 'Hadir',
-                                                  noOrder: widget.noOrder,
-                                                )));
-                                          } else {
-                                            widgetsnackbar(
-                                                context,
-                                                'Tanggal belum di set',
-                                                redColor);
-                                          }
-                                        },
-                                        child: Text(
-                                          'Hadir',
-                                          style: whiteTextStyle.copyWith(
-                                              fontSize: 11.sp),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    redColor)),
-                                        onPressed: () {
-                                          if (validate()) {
-                                            context
-                                                .read<AbsenBloc>()
-                                                .add(AddAbsenEvent(
-                                                    absenRequest: AbsenRequest(
-                                                  idPerson:
-                                                      data[index].id.toString(),
-                                                  tanggal: TextUtils()
-                                                      .dateFormatInt(dates),
-                                                  keterangan: 'Tidak Hadir',
-                                                  noOrder: widget.noOrder,
-                                                )));
-                                            setState(() {
-                                              isSelected[index] = true;
-                                            });
-                                          } else {
-                                            widgetsnackbar(
-                                                context,
-                                                'Tanggal belum di set',
-                                                redColor);
-                                          }
-                                        },
-                                        child: Text(
-                                          'Tidak Hadir',
-                                          style: whiteTextStyle.copyWith(
-                                              fontSize: 11.sp),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]);
-                            }),
+                                return dataTable(
+                                    index, dataPersonel, data.length);
+                              },
+                            ),
                           ),
                         ],
                       ),
