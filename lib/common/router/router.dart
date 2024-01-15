@@ -21,6 +21,7 @@ import 'package:hama_app/presentation/pages/home/list_order_page.dart';
 import 'package:hama_app/presentation/pages/home_page.dart';
 import 'package:hama_app/presentation/pages/personel/personel_page.dart';
 import 'package:hama_app/presentation/pages/signature/signature_document.dart';
+import 'package:hama_app/presentation/pages/signature/signature_page.dart';
 import 'package:hama_app/presentation/pages/splash_screen_page.dart';
 
 class AppRouter {
@@ -51,6 +52,12 @@ class AppRouter {
                 return HomePage();
               },
               routes: [
+                GoRoute(
+                    path: SignaturePage.path,
+                    name: SignaturePage.routeName,
+                    builder: (context, state) {
+                      return SignaturePage();
+                    }),
                 GoRoute(
                     path: ListOrderPage.path,
                     name: ListOrderPage.routeName,

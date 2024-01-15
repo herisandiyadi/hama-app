@@ -12,6 +12,7 @@ import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
 import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
+import 'package:hama_app/presentation/bloc/signature/signature_bloc.dart';
 
 void main() {
   di.init();
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => di.locator<DailyBloc>()),
         BlocProvider(create: (context) => di.locator<InspeksiBloc>()),
         BlocProvider(create: (context) => di.locator<IndexHamaBloc>()),
+        BlocProvider(create: (context) => di.locator<SignatureBloc>()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(430, 932),

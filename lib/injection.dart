@@ -8,6 +8,8 @@ import 'package:hama_app/data/datasource/order/order_remote_data_source.dart';
 import 'package:hama_app/data/datasource/pemakaian/pemakaian_remote_data_source.dart';
 import 'package:hama_app/data/datasource/peralatan/peralatan_remote_data_source.dart';
 import 'package:hama_app/data/datasource/personal/personal_remote_data_source.dart';
+import 'package:hama_app/data/datasource/signature/signature_local_data_source.dart';
+import 'package:hama_app/data/db/database_helper.dart';
 import 'package:hama_app/data/repositories/auth_repository_impl.dart';
 import 'package:hama_app/data/repositories/daily_repository_impl.dart';
 import 'package:hama_app/data/repositories/index_hama_repository_impl.dart';
@@ -16,6 +18,7 @@ import 'package:hama_app/data/repositories/order_repository_impl.dart';
 import 'package:hama_app/data/repositories/pemakaian_repository_impl.dart';
 import 'package:hama_app/data/repositories/peralatan_repository_impl.dart';
 import 'package:hama_app/data/repositories/personal_repository_impl.dart';
+import 'package:hama_app/data/repositories/signature_repository_impl.dart';
 import 'package:hama_app/domain/repositories/auth_repository.dart';
 import 'package:hama_app/domain/repositories/daily_repository.dart';
 import 'package:hama_app/domain/repositories/index_hama_repository.dart';
@@ -24,6 +27,7 @@ import 'package:hama_app/domain/repositories/order_repository.dart';
 import 'package:hama_app/domain/repositories/pemakaian_repository.dart';
 import 'package:hama_app/domain/repositories/peralatan_repository.dart';
 import 'package:hama_app/domain/repositories/personal_repository.dart';
+import 'package:hama_app/domain/repositories/signature_repository.dart';
 import 'package:hama_app/domain/usecase/daily/add_daily_usecase.dart';
 import 'package:hama_app/domain/usecase/daily/get_all_daily_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/daily/get_all_daily_by_month_usecase.dart';
@@ -56,6 +60,11 @@ import 'package:hama_app/domain/usecase/personel/get_all_personal.dart';
 import 'package:hama_app/domain/usecase/personel/get_delete_personal.dart';
 import 'package:hama_app/domain/usecase/personel/get_update_personal.dart';
 import 'package:hama_app/domain/usecase/personel/logout_usecase.dart';
+import 'package:hama_app/domain/usecase/signature/clear_signature_usecase.dart';
+import 'package:hama_app/domain/usecase/signature/delete_signature_usecase.dart';
+import 'package:hama_app/domain/usecase/signature/get_all_signature_usecase.dart';
+import 'package:hama_app/domain/usecase/signature/save_signature_usecase.dart';
+import 'package:hama_app/domain/usecase/signature/select_signature_usecase.dart';
 import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/bloc/dailiy/daily_bloc.dart';
@@ -65,6 +74,7 @@ import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
 import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/bloc/personel/personel_bloc.dart';
+import 'package:hama_app/presentation/bloc/signature/signature_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart' as pref;
 
@@ -88,6 +98,8 @@ void init() {
       () => InspeksiRemoteDataSourceImpl(client: locator()));
   locator.registerLazySingleton<IndexHamaRemoteDataSource>(
       () => IndexHamaRemoteDataSourceImpl(client: locator()));
+  locator.registerLazySingleton<SignatureLocalDataSource>(
+      () => SignatureLocalDataSourceImpl(databaseHelper: locator()));
 
 //repository
   locator.registerLazySingleton<AuthRepository>(
@@ -106,6 +118,8 @@ void init() {
       () => InspeksiRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<IndexHamaRepository>(
       () => IndexhamaRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<SignatureRepository>(
+      () => SignatureRepositoryImpl(localDataSource: locator()));
 
 //usecase
   locator.registerLazySingleton(() => GetLogin(locator()));
@@ -148,6 +162,12 @@ void init() {
   locator.registerLazySingleton(() => GetAllIndexHamaUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaByMonthUsecase(locator()));
+
+  locator.registerLazySingleton(() => ClearSignatureUsecase(locator()));
+  locator.registerLazySingleton(() => DeleteSignatureUsecase(locator()));
+  locator.registerLazySingleton(() => GetAllSignatureUsecase(locator()));
+  locator.registerLazySingleton(() => SaveSignatureUsecase(locator()));
+  locator.registerLazySingleton(() => SelectSignatureUsecase(locator()));
 
   //bloc
 
@@ -205,6 +225,16 @@ void init() {
       getAllIndexHamaUsecase: locator(),
       getAllIndexHamaByMonthUsecase: locator(),
       getAllIndexHamaByDateUsecase: locator()));
+
+  locator.registerFactory(() => SignatureBloc(
+        saveSignatureUsecase: locator(),
+        deleteSignatureUsecase: locator(),
+        getAllSignatureUsecase: locator(),
+        selectSignatureUsecase: locator(),
+      ));
+
+//database
+  locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
 //external
   locator.registerLazySingleton(() => http.Client());

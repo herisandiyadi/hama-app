@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/presentation/pages/home/dashboard_home_page.dart';
 import 'package:hama_app/presentation/pages/home/more_page.dart';
+import 'package:hama_app/presentation/pages/signature/signature_page.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomePage extends StatefulWidget {
@@ -107,16 +108,17 @@ class _HomePageState extends State<HomePage> {
             shape: const CircleBorder(),
             fillColor: whiteColor,
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child:
-                        SizedBox(width: 1.sw, height: 1.sh, child: SizedBox()),
-                  );
-                },
-              );
+              // showModalBottomSheet(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return Padding(
+              //       padding: const EdgeInsets.all(16.0),
+              //       child:
+              //           SizedBox(width: 1.sw, height: 1.sh, child: SizedBox()),
+              //     );
+              //   },
+              // );
+              context.goNamed(SignaturePage.routeName);
             },
             constraints: const BoxConstraints.tightFor(
               width: 75.0,
