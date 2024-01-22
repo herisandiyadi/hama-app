@@ -1,5 +1,7 @@
-const String baseUrl = 'https://c7f1-103-144-175-154.ngrok-free.app';
+const String baseUrl =
+    'https://4e05-2404-8000-1027-f0dc-5dfe-6a66-1012-2c18.ngrok-free.app';
 const String imageUrl = '$baseUrl/uploads';
+const String pdfUrl = '$baseUrl/uploads';
 
 const String cacheToken = 'cache-token';
 const String cacheLogin = 'cache-login';

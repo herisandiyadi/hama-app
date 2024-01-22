@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:hama_app/common/utils/constants.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
-import 'package:hama_app/common/utils/constants.dart';
-import 'package:http/http.dart' as http;
+import 'package:hama_app/common/utils/text_utils.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/pages/auth/login_page.dart';
 import 'package:open_app_file/open_app_file.dart';
@@ -27,7 +28,6 @@ class MorePage extends StatefulWidget {
 class _MorePageState extends State<MorePage> {
   final GlobalKey<SfSignaturePadState> signaturePadKey =
       GlobalKey<SfSignaturePadState>();
-  File? filePdf;
   Uint8List? image;
   @override
   Widget build(BuildContext context) {
@@ -175,71 +175,102 @@ class _MorePageState extends State<MorePage> {
         final filePath = '${directory.path}/downloaded_pdf.pdf';
 
         // Tulis data PDF ke file lokal
-        filePdf = File(filePath);
-        await filePdf!.writeAsBytes(response.bodyBytes);
-        OpenAppFile.open(filePdf!.path);
+        final File file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        final existingPdfBytes = file.readAsBytesSync();
 
         print('PDF berhasil diunduh ke: $filePath');
-      } else {
-        print('Gagal mengunduh PDF. Kode status: ${response.statusCode}');
+
+        final date = DateTime.now();
+        // Buat dokumen PDF
+        final PdfDocument document = PdfDocument(inputBytes: existingPdfBytes);
+        document.pageSettings.orientation;
+        // Tambahkan halaman ke dokumen
+        final PdfPage page = document.pages[0];
+
+        // Tambahkan konten ke halaman
+        final PdfGraphics graphics = page.graphics;
+        // graphics.drawString('MONITORING PERALATAN PEST CONTROL ',
+        //     PdfStandardFont(PdfFontFamily.helvetica, 18),
+        //     bounds: Rect.fromLTWH(0, 10, page.getClientSize().width, 30),
+        //     format: PdfStringFormat(alignment: PdfTextAlignment.center));
+
+        // graphics.drawString('Tanggal : ${TextUtils().dateFormatId(date)}',
+        //     PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //     bounds: Rect.fromLTWH(0, 50, page.getClientSize().width, 20));
+        // graphics.drawString('Periode : ${TextUtils().monthFormatInt(date)}',
+        //     PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //     bounds: Rect.fromLTWH(0, 65, page.getClientSize().width, 20));
+        // graphics.drawString('Berikut daftar peralatan di Project ...........',
+        //     PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //     bounds: Rect.fromLTWH(0, 80, page.getClientSize().width, 20));
+
+        // final PdfGrid grid = PdfGrid();
+        // grid.columns.add(count: 6);
+        // grid.headers.add(1);
+        // grid.headers[0].cells[0].value = 'No';
+        // grid.headers[0].cells[1].value = 'Nama';
+        // grid.headers[0].cells[2].value = 'Merk';
+        // grid.headers[0].cells[3].value = 'Jumlah';
+        // grid.headers[0].cells[4].value = 'Satuan';
+        // grid.headers[0].cells[5].value = 'Kondisi';
+
+        // for (int i = 0; i < products.length; i++) {
+        //   grid.rows.add();
+        //   grid.rows[i].cells[0].value = i;
+        //   grid.rows[i].cells[1].value = products[i];
+        //   grid.rows[i].cells[2].value = products[i];
+        //   grid.rows[i].cells[3].value = products[i];
+        //   grid.rows[i].cells[4].value = products[i];
+        //   grid.rows[i].cells[5].value = '\$${prices[i].toStringAsFixed(2)}';
+        // }
+
+        // grid.draw(
+        //   page: page,
+        //   bounds: Rect.fromLTWH(20, 100, page.getClientSize().width - 40,
+        //       page.getClientSize().height - 150),
+        // );
+        // Tambahkan daftar produk dan harga ke halaman
+        // for (int i = 0; i < products.length; i++) {
+        //   graphics.drawString(
+        //       products[i], PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //       bounds: Rect.fromLTWH(20, 100 + i * 20, 200, 20));
+        //   graphics.drawString('\$${prices[i].toStringAsFixed(2)}',
+        //       PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //       bounds: Rect.fromLTWH(
+        //           page.getClientSize().width - 100, 100 + i * 20, 80, 20));
+        //   totalPrice += prices[i];
+        // }
+
+        // Tambahkan total harga ke halaman
+
+        final PdfBitmap signatureImage = PdfBitmap(image);
+        graphics.drawString(
+            'Disiapkan Oleh,', PdfStandardFont(PdfFontFamily.helvetica, 12),
+            bounds: Rect.fromLTWH(30, page.getClientSize().height - 180,
+                page.getClientSize().width, 20));
+        graphics.drawString(
+            'Personel,', PdfStandardFont(PdfFontFamily.helvetica, 12),
+            bounds: Rect.fromLTWH(30, page.getClientSize().height - 165,
+                page.getClientSize().width, 20));
+
+        page.graphics.drawImage(signatureImage,
+            Rect.fromLTWH(0, page.getClientSize().height - 165, 130, 86.67));
+        graphics.drawString('----------------------',
+            PdfStandardFont(PdfFontFamily.helvetica, 12),
+            bounds: Rect.fromLTWH(30, page.getClientSize().height - 75,
+                page.getClientSize().width, 20));
+
+        // Simpan dokumen PDF ke file
+        final List<int> bytes = await document.save();
+        final String filePatz = await getFilePath();
+
+        await File(filePatz).writeAsBytes(bytes);
+        OpenAppFile.open(filePatz);
+
+        // Tutup dokumen PDF
+        document.dispose();
       }
-
-      final existingPdfBytes = filePdf!.readAsBytesSync();
-      final existingPdfDocument =
-          PdfDocument(inputBytes: existingPdfBytes.toList());
-
-      final date = DateTime.now();
-      // Buat dokumen PDF
-      final PdfDocument document = PdfDocument();
-      document.pageSettings.orientation;
-      // Tambahkan halaman ke dokumen
-      final PdfPage page = existingPdfDocument.pages.add();
-
-      // Tambahkan konten ke halaman
-      final PdfGraphics graphics = page.graphics;
-      // graphics.drawString('MONITORING PERALATAN PEST CONTROL ',
-      //     PdfStandardFont(PdfFontFamily.helvetica, 18),
-      //     bounds: Rect.fromLTWH(0, 10, page.getClientSize().width, 30),
-      //     format: PdfStringFormat(alignment: PdfTextAlignment.center));
-
-      // graphics.drawString('Tanggal : ${TextUtils().dateFormatId(date)}',
-      //     PdfStandardFont(PdfFontFamily.helvetica, 12),
-      //     bounds: Rect.fromLTWH(0, 50, page.getClientSize().width, 20));
-      // graphics.drawString('Periode : ${TextUtils().monthFormatInt(date)}',
-      //     PdfStandardFont(PdfFontFamily.helvetica, 12),
-      //     bounds: Rect.fromLTWH(0, 65, page.getClientSize().width, 20));
-      // graphics.drawString('Berikut daftar peralatan di Project ...........',
-      //     PdfStandardFont(PdfFontFamily.helvetica, 12),
-      //     bounds: Rect.fromLTWH(0, 80, page.getClientSize().width, 20));
-
-      // Tambahkan total harga ke halaman
-
-      final PdfBitmap signatureImage = PdfBitmap(image);
-      graphics.drawString(
-          'Disiapkan Oleh,', PdfStandardFont(PdfFontFamily.helvetica, 12),
-          bounds: Rect.fromLTWH(30, page.getClientSize().height - 180,
-              page.getClientSize().width, 20));
-      graphics.drawString(
-          'Personel,', PdfStandardFont(PdfFontFamily.helvetica, 12),
-          bounds: Rect.fromLTWH(30, page.getClientSize().height - 165,
-              page.getClientSize().width, 20));
-
-      page.graphics.drawImage(signatureImage,
-          Rect.fromLTWH(0, page.getClientSize().height - 165, 130, 86.67));
-      graphics.drawString('----------------------',
-          PdfStandardFont(PdfFontFamily.helvetica, 12),
-          bounds: Rect.fromLTWH(30, page.getClientSize().height - 75,
-              page.getClientSize().width, 20));
-
-      // Simpan dokumen PDF ke file
-      final List<int> bytes = await document.save();
-      final String filePath = await getFilePath();
-
-      await File(filePath).writeAsBytes(bytes);
-      OpenAppFile.open(filePath);
-
-      // Tutup dokumen PDF
-      document.dispose();
     }
 
     Widget header() {
