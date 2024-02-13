@@ -17,6 +17,7 @@ import 'package:hama_app/presentation/pages/form/pemakaian/form_monitoring_pemak
 import 'package:hama_app/presentation/pages/form/pemakaian/list_monitoring_pemakaian_page.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/form_monitoring_peralatan.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
+import 'package:hama_app/presentation/pages/form/report/report_page.dart';
 import 'package:hama_app/presentation/pages/home/list_order_page.dart';
 import 'package:hama_app/presentation/pages/home_page.dart';
 import 'package:hama_app/presentation/pages/personel/personel_page.dart';
@@ -223,6 +224,16 @@ class AppRouter {
                                         final extras =
                                             state.extra as Map<String, dynamic>;
                                         return FormIndexPopulasiHama(
+                                          noOrder: extras['noOrder'],
+                                        );
+                                      }),
+                                  GoRoute(
+                                      path: ReportPage.path,
+                                      name: ReportPage.routeName,
+                                      builder: (context, state) {
+                                        final extras =
+                                            state.extra as Map<String, dynamic>;
+                                        return ReportPage(
                                           noOrder: extras['noOrder'],
                                         );
                                       }),

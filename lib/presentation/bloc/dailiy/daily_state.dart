@@ -36,3 +36,13 @@ final class GetAllDailySuccess extends DailyState {
   @override
   List<Object> get props => [listDailyEntity];
 }
+
+final class GenerateDailyPDFMonthlySuccess extends DailyState {
+  final GeneratePDFEntity generatePDFEntity;
+
+  const GenerateDailyPDFMonthlySuccess({required this.generatePDFEntity});
+  @override
+  List<Object> get props => [
+        generatePDFEntity,
+      ];
+}

@@ -32,6 +32,7 @@ import 'package:hama_app/domain/usecase/daily/add_daily_usecase.dart';
 import 'package:hama_app/domain/usecase/daily/get_all_daily_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/daily/get_all_daily_by_month_usecase.dart';
 import 'package:hama_app/domain/usecase/daily/get_all_daily_usecase.dart';
+import 'package:hama_app/domain/usecase/daily/get_daily_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/get_all_data_order.dart';
 import 'package:hama_app/domain/usecase/get_create_order.dart';
 import 'package:hama_app/domain/usecase/get_login.dart';
@@ -39,6 +40,7 @@ import 'package:hama_app/domain/usecase/index_hama/add_index_hama_usecase.dart';
 import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_by_MOnth_usecase.dart';
 import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/index_hama/get_all_index_hama_usecase.dart';
+import 'package:hama_app/domain/usecase/index_hama/get_index_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/add_inspeksi_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_month_usecase.dart';
@@ -152,11 +154,13 @@ void init() {
   locator.registerLazySingleton(() => GetAllDailyUsecase(locator()));
   locator.registerLazySingleton(() => GetAllDailyByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllDailyByMonthUsecase(locator()));
+  locator.registerLazySingleton(() => GetDailyPDFMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => AddInspeksiUsecase(locator()));
   locator.registerLazySingleton(() => GetAllInspeksiUsecase(locator()));
   locator.registerLazySingleton(() => GetAllInspeksiByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllInspeksiByMonthUsecase(locator()));
+  locator.registerLazySingleton(() => GetIndexPdfMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => AddIndexHamaUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaUsecase(locator()));
@@ -208,6 +212,7 @@ void init() {
       getAllDailyUsecase: locator(),
       getAllDailyByDateUsecase: locator(),
       getAllDailyByMonthUsecase: locator(),
+      getDailyPDFMonthlyUsecase: locator(),
     ),
   );
 
@@ -221,10 +226,12 @@ void init() {
   );
 
   locator.registerFactory(() => IndexHamaBloc(
-      addIndexHamaUsecase: locator(),
-      getAllIndexHamaUsecase: locator(),
-      getAllIndexHamaByMonthUsecase: locator(),
-      getAllIndexHamaByDateUsecase: locator()));
+        addIndexHamaUsecase: locator(),
+        getAllIndexHamaUsecase: locator(),
+        getAllIndexHamaByMonthUsecase: locator(),
+        getAllIndexHamaByDateUsecase: locator(),
+        getIndexPdfMonthlyUsecase: locator(),
+      ));
 
   locator.registerFactory(() => SignatureBloc(
         saveSignatureUsecase: locator(),

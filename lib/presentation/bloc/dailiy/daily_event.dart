@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'daily_bloc.dart';
 
 abstract class DailyEvent extends Equatable {
@@ -48,6 +49,24 @@ class FetchGetAllDailyByMonth extends DailyEvent {
 
   const FetchGetAllDailyByMonth(
       {required this.noOrder, required this.year, required this.month});
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
+}
+
+class FetchDailyPDFMonthly extends DailyEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchDailyPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
   @override
   List<Object> get props => [
         noOrder,

@@ -47,3 +47,21 @@ class FetchGetAllByMonthIndexHama extends IndexHamaEvent {
   @override
   List<Object> get props => [noOrder, year, month];
 }
+
+class FetchIndexPDFMonthly extends IndexHamaEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchIndexPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
+}

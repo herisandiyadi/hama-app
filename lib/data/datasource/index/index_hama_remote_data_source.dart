@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/exceptions.dart';
+import 'package:hama_app/data/models/daily/generate_pdf_response.dart';
 import 'package:hama_app/data/models/index/index_hama_model.dart';
 import 'package:hama_app/data/models/index/index_hama_response.dart';
 import 'package:hama_app/data/models/index/list_index_hama_response.dart';
@@ -15,6 +16,8 @@ abstract class IndexHamaRemoteDataSource {
   Future<ListIndexHamaResponse> getAllIndexHamaByDate(
       String noOrder, String date);
   Future<ListIndexHamaResponse> getAllIndexHamaByMonth(
+      String noOrder, String year, String month);
+  Future<GeneratePdfResponse> generatePDFMonthly(
       String noOrder, String year, String month);
 }
 
@@ -113,6 +116,28 @@ class IndexHamaRemoteDataSourceImpl implements IndexHamaRemoteDataSource {
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
       final jsonResponse = ListIndexHamaResponse.fromJson(json);
+
+      return jsonResponse;
+    } else {
+      throw MessageException(json['message']);
+    }
+  }
+
+  @override
+  Future<GeneratePdfResponse> generatePDFMonthly(
+      String noOrder, String year, String month) async {
+    final token = await CacheUtil.getString(cacheToken);
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': '$token'
+    };
+    final response = await client.get(
+      Uri.parse('$baseUrl/api/indeks/download/$noOrder/$year/$month'),
+      headers: headers,
+    );
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      final jsonResponse = GeneratePdfResponse.fromJson(json);
 
       return jsonResponse;
     } else {

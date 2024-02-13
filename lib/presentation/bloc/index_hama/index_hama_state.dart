@@ -35,3 +35,13 @@ final class GetAllIndexHamaSuccess extends IndexHamaState {
   @override
   List<Object> get props => [listIndexHamaEntity];
 }
+
+final class GenerateIndexPDFMonthlySuccess extends IndexHamaState {
+  final GeneratePDFEntity generatePDFEntity;
+
+  const GenerateIndexPDFMonthlySuccess({required this.generatePDFEntity});
+  @override
+  List<Object> get props => [
+        generatePDFEntity,
+      ];
+}

@@ -55,6 +55,7 @@ class _SignaturePageState extends State<SignaturePage> {
             if (state is GetAllSignatureSuccess) {
               setState(() {
                 jumlahSign = state.listEntity.length;
+                print(jumlahSign);
               });
             }
           },
@@ -133,15 +134,21 @@ class _SignaturePageState extends State<SignaturePage> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: SizedBox(
-                  height: 300.h,
+                child: Container(
+                  height: 220.h,
                   width: 1.sw,
-                  child: SfSignaturePad(
-                    key: signaturePadKey,
-                    minimumStrokeWidth: 1,
-                    maximumStrokeWidth: 3,
-                    strokeColor: darkColor,
-                    backgroundColor: softGreyColor,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: softGreyColor)),
+                  child: SizedBox(
+                    height: 200.h,
+                    width: 300.w,
+                    child: SfSignaturePad(
+                      key: signaturePadKey,
+                      minimumStrokeWidth: 1,
+                      maximumStrokeWidth: 3,
+                      strokeColor: darkColor,
+                      backgroundColor: transparentColor,
+                    ),
                   ),
                 ),
               ),
@@ -159,9 +166,8 @@ class _SignaturePageState extends State<SignaturePage> {
                           backgroundColor:
                               MaterialStateProperty.all(greenColor)),
                       onPressed: () async {
-                        if (jumlahSign != null && jumlahSign! >= 2) {
-                          widgetsnackbar(context,
-                              'Sign tidak bisa lebih dari 2', redColor);
+                        if (jumlahSign != null && jumlahSign! >= 1) {
+                          widgetsnackbar(context, 'Sign sudah ada', redColor);
                         } else {
                           final data = await saveSignature();
                           context

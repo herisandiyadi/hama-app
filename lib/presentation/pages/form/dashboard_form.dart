@@ -6,6 +6,7 @@ import 'package:hama_app/presentation/pages/form/index/list_index_hama_page.dart
 import 'package:hama_app/presentation/pages/form/inspeksi/list_inspeksi_hama_page.dart';
 import 'package:hama_app/presentation/pages/form/pemakaian/list_monitoring_pemakaian_page.dart';
 import 'package:hama_app/presentation/pages/form/peralatan/list_monitoring_peralatan.dart';
+import 'package:hama_app/presentation/pages/form/report/report_page.dart';
 import 'package:hama_app/presentation/widget/icon_form_widget.dart';
 
 class DashboardFormPage extends StatelessWidget {
@@ -54,6 +55,12 @@ class DashboardFormPage extends StatelessWidget {
               label: 'Penghitungan Populasi Hama',
               onPressed: () => context.goNamed(ListIndexHamaPage.routeName,
                   extra: {'noOrder': noOrder}),
+            ),
+            IconFormWidget(
+              icon: Icons.draw_outlined,
+              label: 'Report',
+              onPressed: () => context
+                  .goNamed(ReportPage.routeName, extra: {'noOrder': noOrder}),
             ),
           ],
         ),

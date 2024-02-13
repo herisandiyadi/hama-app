@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/exceptions.dart';
+import 'package:hama_app/data/models/daily/generate_pdf_response.dart';
 import 'package:hama_app/data/models/pemakaian/list_pemakaian_response.dart';
 import 'package:hama_app/data/models/pemakaian/pemakaian_model.dart';
 import 'package:hama_app/data/models/pemakaian/pemakaian_response.dart';
@@ -14,6 +15,8 @@ abstract class PemakaianRemoteDataSource {
   Future<ListPemakaianResponse> getAllPemakaianByDate(
       String noOrder, String date);
   Future<ListPemakaianResponse> getAllPemakaianByMonth(
+      String noOrder, String year, String month);
+  Future<GeneratePdfResponse> generatePDFMonthly(
       String noOrder, String year, String month);
 }
 
@@ -116,6 +119,28 @@ class PemakaianRemoteDataSourceImpl implements PemakaianRemoteDataSource {
     final json = jsonDecode(response.body);
     if (response.statusCode == 201) {
       final jsonResponse = ListPemakaianResponse.fromJson(json);
+
+      return jsonResponse;
+    } else {
+      throw MessageException(json['message']);
+    }
+  }
+
+  @override
+  Future<GeneratePdfResponse> generatePDFMonthly(
+      String noOrder, String year, String month) async {
+    final token = await CacheUtil.getString(cacheToken);
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': '$token'
+    };
+    final response = await client.get(
+      Uri.parse('$baseUrl/api/pemakaian/download/$noOrder/$year/$month'),
+      headers: headers,
+    );
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      final jsonResponse = GeneratePdfResponse.fromJson(json);
 
       return jsonResponse;
     } else {

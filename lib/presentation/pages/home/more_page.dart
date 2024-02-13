@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
-import 'package:hama_app/common/utils/text_utils.dart';
 import 'package:hama_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:hama_app/presentation/pages/auth/login_page.dart';
 import 'package:open_app_file/open_app_file.dart';
@@ -164,8 +163,8 @@ class _MorePageState extends State<MorePage> {
 
     Future<void> generateInvoicePDF(String customerName, List<String> products,
         List<double> prices, Uint8List image) async {
-      final response =
-          await http.get(Uri.parse('$baseUrl/uploads/peralatan-202312.pdf'));
+      final response = await http
+          .get(Uri.parse('$baseUrl/uploads/daily-postman2-202312.pdf'));
 
       if (response.statusCode == 200) {
         // Dapatkan direktori penyimpanan lokal
@@ -186,7 +185,8 @@ class _MorePageState extends State<MorePage> {
         final PdfDocument document = PdfDocument(inputBytes: existingPdfBytes);
         document.pageSettings.orientation;
         // Tambahkan halaman ke dokumen
-        final PdfPage page = document.pages[0];
+        final pageIndex = document.pages.count - 1;
+        final PdfPage page = document.pages[pageIndex];
 
         // Tambahkan konten ke halaman
         final PdfGraphics graphics = page.graphics;
@@ -244,6 +244,8 @@ class _MorePageState extends State<MorePage> {
 
         // Tambahkan total harga ke halaman
 
+        //--------------------------------Disiapkan-----------------------------------------------
+
         final PdfBitmap signatureImage = PdfBitmap(image);
         graphics.drawString(
             'Disiapkan Oleh,', PdfStandardFont(PdfFontFamily.helvetica, 12),
@@ -260,6 +262,32 @@ class _MorePageState extends State<MorePage> {
             PdfStandardFont(PdfFontFamily.helvetica, 12),
             bounds: Rect.fromLTWH(30, page.getClientSize().height - 75,
                 page.getClientSize().width, 20));
+
+//--------------------------------Menyetujui-----------------------------------------------
+
+        graphics.drawString(
+            'Menyetujui,', PdfStandardFont(PdfFontFamily.helvetica, 12),
+            bounds: Rect.fromLTWH(
+                page.getClientSize().width - 10,
+                page.getClientSize().height - 180,
+                page.getClientSize().width,
+                20));
+        // graphics.drawString(
+        //     'Personel,', PdfStandardFont(PdfFontFamily.helvetica, 12),
+        //     bounds: Rect.fromLTWH(30, page.getClientSize().height - 165,
+        //         page.getClientSize().width, 20));
+
+        page.graphics.drawImage(
+            signatureImage,
+            Rect.fromLTWH(page.getClientSize().width - 100,
+                page.getClientSize().height - 165, 130, 86.67));
+        graphics.drawString(
+            'Heri Sandiyadi', PdfStandardFont(PdfFontFamily.helvetica, 12),
+            bounds: Rect.fromLTWH(
+                page.getClientSize().width - 10,
+                page.getClientSize().height - 75,
+                page.getClientSize().width,
+                20));
 
         // Simpan dokumen PDF ke file
         final List<int> bytes = await document.save();

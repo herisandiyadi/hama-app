@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:hama_app/common/utils/failure.dart';
 import 'package:hama_app/domain/entities/daily/daily_entity.dart';
 import 'package:hama_app/domain/entities/daily/daily_request.dart';
+import 'package:hama_app/domain/entities/daily/generate_pdf_entity.dart';
 import 'package:hama_app/domain/entities/daily/list_daily_entity.dart';
 
 abstract class DailyRepository {
@@ -11,5 +12,7 @@ abstract class DailyRepository {
   Future<Either<Failure, ListDailyEntity>> getAllDailyByDate(
       String noOrder, String tanggal);
   Future<Either<Failure, ListDailyEntity>> getAllDailyByMonth(
+      String noOrder, String year, String month);
+  Future<Either<Failure, GeneratePDFEntity>> getDownloadPDFMonthly(
       String noOrder, String year, String month);
 }
