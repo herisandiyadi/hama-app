@@ -3,7 +3,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/presentation/pages/home/dashboard_home_page.dart';
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     Icons.more_horiz_outlined,
   ];
 
-  final listTextMenu = const ['Beranda', 'Report'];
+  final listTextMenu = const ['Beranda', 'Setting'];
 
   @override
   Widget build(BuildContext context) {
@@ -108,16 +107,6 @@ class _HomePageState extends State<HomePage> {
             shape: const CircleBorder(),
             fillColor: whiteColor,
             onPressed: () {
-              // showModalBottomSheet(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return Padding(
-              //       padding: const EdgeInsets.all(16.0),
-              //       child:
-              //           SizedBox(width: 1.sw, height: 1.sh, child: SizedBox()),
-              //     );
-              //   },
-              // );
               context.goNamed(SignaturePage.routeName);
             },
             constraints: const BoxConstraints.tightFor(
@@ -129,7 +118,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Icon(Icons.co_present_outlined),
                 Text(
-                  'Absen',
+                  'E-SIGN',
                   style: darkTextStyle.copyWith(fontSize: 13),
                 ),
               ],

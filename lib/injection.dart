@@ -45,16 +45,20 @@ import 'package:hama_app/domain/usecase/inspeksi/add_inspeksi_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_month_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/get_inspeksi_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/add_pemakaian_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_month.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_usecase.dart';
+import 'package:hama_app/domain/usecase/pemakaian/get_pemakaian_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/peralatan/add_peralatan_usecase.dart';
 import 'package:hama_app/domain/usecase/peralatan/get_all_peralatan_usecase.dart';
 import 'package:hama_app/domain/usecase/peralatan/get_peralatan_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/peralatan/get_peralatan_by_month_usecase.dart';
+import 'package:hama_app/domain/usecase/peralatan/get_peralatan_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_date.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_by_id.dart';
+import 'package:hama_app/domain/usecase/personel/get_absen_pdf_monthly_usecase.dart';
 import 'package:hama_app/domain/usecase/personel/get_absen_person_by_month.dart';
 import 'package:hama_app/domain/usecase/personel/get_add_absen.dart';
 import 'package:hama_app/domain/usecase/personel/get_add_personal.dart';
@@ -131,6 +135,7 @@ void init() {
   locator.registerLazySingleton(() => GetAbsenById(locator()));
   locator.registerLazySingleton(() => GetAddAbsen(locator()));
   locator.registerLazySingleton(() => GetAbsenPersonByMonth(locator()));
+  locator.registerLazySingleton(() => GetAbsenPDFMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => GetAddPersonal(locator()));
   locator.registerLazySingleton(() => GetAllPersonal(locator()));
@@ -144,11 +149,13 @@ void init() {
   locator.registerLazySingleton(() => GetAllPeralatanUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPeralatanByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPeralatanByMonthUsecase(locator()));
+  locator.registerLazySingleton(() => GetPeralatanMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => AddPemakaianUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPemakaianUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPemakaianByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllPemakaianByMonthUsecase(locator()));
+  locator.registerLazySingleton(() => GetPemakaianMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => AddDailyUsecase(locator()));
   locator.registerLazySingleton(() => GetAllDailyUsecase(locator()));
@@ -160,12 +167,13 @@ void init() {
   locator.registerLazySingleton(() => GetAllInspeksiUsecase(locator()));
   locator.registerLazySingleton(() => GetAllInspeksiByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllInspeksiByMonthUsecase(locator()));
-  locator.registerLazySingleton(() => GetIndexPdfMonthlyUsecase(locator()));
+  locator.registerLazySingleton(() => GetInspeksiMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => AddIndexHamaUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaByDateUsecase(locator()));
   locator.registerLazySingleton(() => GetAllIndexHamaByMonthUsecase(locator()));
+  locator.registerLazySingleton(() => GetIndexPdfMonthlyUsecase(locator()));
 
   locator.registerLazySingleton(() => ClearSignatureUsecase(locator()));
   locator.registerLazySingleton(() => DeleteSignatureUsecase(locator()));
@@ -186,9 +194,11 @@ void init() {
       getUpdatePersonal: locator()));
 
   locator.registerFactory(() => AbsenBloc(
-      getAddAbsen: locator(),
-      getAbsenById: locator(),
-      getAbsenPersonByMonth: locator()));
+        getAddAbsen: locator(),
+        getAbsenById: locator(),
+        getAbsenPersonByMonth: locator(),
+        getAbsenPDFMonthlyUsecase: locator(),
+      ));
 
   locator.registerFactory(
     () => PeralatanBloc(
@@ -196,6 +206,7 @@ void init() {
       getAllPeralatanUsecase: locator(),
       getAllPeralatanByDateUsecase: locator(),
       getAllPeralatanByMonthUsecase: locator(),
+      getPeralatanMonthlyUsecase: locator(),
     ),
   );
 
@@ -204,6 +215,7 @@ void init() {
         getAllPemakaianByMonthUsecase: locator(),
         getAllPemakaianUsecase: locator(),
         getAllPeralatanByDateUsecase: locator(),
+        getPemakaianMonthlyUsecase: locator(),
       ));
 
   locator.registerFactory(
@@ -222,6 +234,7 @@ void init() {
       getAllInspeksiUsecase: locator(),
       getAllInspeksiByDateUsecase: locator(),
       getAllInspeksiByMonthUsecase: locator(),
+      getInspeksiMonthlyUsecase: locator(),
     ),
   );
 

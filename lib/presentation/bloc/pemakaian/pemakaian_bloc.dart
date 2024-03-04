@@ -1,5 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:hama_app/domain/entities/daily/generate_pdf_entity.dart';
 import 'package:hama_app/domain/entities/pemakaian/list_pemakaian_entity.dart';
 import 'package:hama_app/domain/entities/pemakaian/pemakaian_entity.dart';
 import 'package:hama_app/domain/entities/pemakaian/pemakaian_request.dart';
@@ -7,6 +10,7 @@ import 'package:hama_app/domain/usecase/pemakaian/add_pemakaian_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_by_month.dart';
 import 'package:hama_app/domain/usecase/pemakaian/get_all_pemakaian_usecase.dart';
+import 'package:hama_app/domain/usecase/pemakaian/get_pemakaian_pdf_monthly_usecase.dart';
 
 part 'pemakaian_event.dart';
 part 'pemakaian_state.dart';
@@ -16,11 +20,13 @@ class PemakaianBloc extends Bloc<PemakaianEvent, PemakaianState> {
   final GetAllPemakaianUsecase getAllPemakaianUsecase;
   final GetAllPemakaianByDateUsecase getAllPeralatanByDateUsecase;
   final GetAllPemakaianByMonthUsecase getAllPemakaianByMonthUsecase;
+  final GetPemakaianMonthlyUsecase getPemakaianMonthlyUsecase;
   PemakaianBloc({
     required this.addPemakaianUsecase,
-    required this.getAllPemakaianByMonthUsecase,
     required this.getAllPemakaianUsecase,
     required this.getAllPeralatanByDateUsecase,
+    required this.getAllPemakaianByMonthUsecase,
+    required this.getPemakaianMonthlyUsecase,
   }) : super(PemakaianInitial()) {
     on<FetchAddPemakaian>((event, emit) async {
       emit(PemakaianLoading());
@@ -58,6 +64,17 @@ class PemakaianBloc extends Bloc<PemakaianEvent, PemakaianState> {
         emit(PemakaianFailed(message: failure.message));
       }, (success) {
         emit(GetAllPemakaianSuccess(listPemakaianEntity: success));
+      });
+    });
+
+    on<FetchPemakaianPDFMonthly>((event, emit) async {
+      emit(PemakaianLoading());
+      final result = await getPemakaianMonthlyUsecase.execute(
+          event.noOrder, event.year, event.month);
+      result.fold((failure) {
+        emit(PemakaianFailed(message: failure.message));
+      }, (success) {
+        emit(GeneratePemakaianPDFMonthlySuccess(generatePDFEntity: success));
       });
     });
   }

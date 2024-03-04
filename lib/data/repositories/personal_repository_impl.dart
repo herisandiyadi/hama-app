@@ -5,6 +5,7 @@ import 'package:hama_app/common/utils/exceptions.dart';
 import 'package:hama_app/common/utils/failure.dart';
 import 'package:hama_app/data/datasource/personal/personal_remote_data_source.dart';
 import 'package:hama_app/data/models/personal/absen_model.dart';
+import 'package:hama_app/domain/entities/daily/generate_pdf_entity.dart';
 import 'package:hama_app/domain/entities/personal/absen_request.dart';
 import 'package:hama_app/domain/entities/personal/data_absen_entity.dart';
 import 'package:hama_app/domain/entities/personal/personal_entity.dart';
@@ -115,6 +116,20 @@ class PersonalRepositoryImpl implements PersonalRepository {
         year,
         month,
       );
+      return Right(result.toEntity());
+    } on MessageException catch (e) {
+      return Left(MessageFailure(e.message));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GeneratePDFEntity>> getDownloadPDFMonthly(
+      String noOrder, String year, String month) async {
+    try {
+      final result =
+          await remoteDataSource.generatePDFMonthly(noOrder, year, month);
       return Right(result.toEntity());
     } on MessageException catch (e) {
       return Left(MessageFailure(e.message));

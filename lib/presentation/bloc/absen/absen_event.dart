@@ -48,3 +48,21 @@ class FetchAbsenPersonByMonth extends AbsenEvent {
         month,
       ];
 }
+
+class FetchAbsenPDFMonthly extends AbsenEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchAbsenPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
+}

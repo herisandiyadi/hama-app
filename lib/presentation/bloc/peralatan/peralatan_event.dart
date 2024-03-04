@@ -11,18 +11,16 @@ abstract class PeralatanEvent extends Equatable {
 class FetchAddPeralatan extends PeralatanEvent {
   final PeralatanRequest peralatanRequest;
 
-  FetchAddPeralatan({required this.peralatanRequest});
+  const FetchAddPeralatan({required this.peralatanRequest});
   @override
-  // TODO: implement props
   List<Object> get props => [peralatanRequest];
 }
 
 class FetchAllPeralatan extends PeralatanEvent {
   final String noOrder;
 
-  FetchAllPeralatan({required this.noOrder});
+  const FetchAllPeralatan({required this.noOrder});
   @override
-  // TODO: implement props
   List<Object> get props => [noOrder];
 }
 
@@ -30,9 +28,8 @@ class FetchPeralatanByDate extends PeralatanEvent {
   final String noOrder;
   final String date;
 
-  FetchPeralatanByDate({required this.noOrder, required this.date});
+  const FetchPeralatanByDate({required this.noOrder, required this.date});
   @override
-  // TODO: implement props
   List<Object> get props => [noOrder, date];
 }
 
@@ -41,12 +38,29 @@ class FetchAllPeralatanByMonth extends PeralatanEvent {
   final String year;
   final String month;
 
-  FetchAllPeralatanByMonth({
+  const FetchAllPeralatanByMonth({
     required this.noOrder,
     required this.year,
     required this.month,
   });
   @override
-  // TODO: implement props
   List<Object> get props => [noOrder, year, month];
+}
+
+class FetchPeralatanPDFMonthly extends PeralatanEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchPeralatanPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
 }

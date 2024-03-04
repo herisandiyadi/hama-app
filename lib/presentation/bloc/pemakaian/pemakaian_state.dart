@@ -14,7 +14,7 @@ final class PemakaianLoading extends PemakaianState {}
 final class PemakaianFailed extends PemakaianState {
   final String message;
 
-  PemakaianFailed({required this.message});
+  const PemakaianFailed({required this.message});
   @override
   // TODO: implement props
   List<Object> get props => [message];
@@ -23,19 +23,27 @@ final class PemakaianFailed extends PemakaianState {
 final class AddPemakaianSuccess extends PemakaianState {
   final PemakaianEntity pemakaianEntity;
 
-  AddPemakaianSuccess({required this.pemakaianEntity});
+  const AddPemakaianSuccess({required this.pemakaianEntity});
 
   @override
-  // TODO: implement props
   List<Object> get props => [pemakaianEntity];
 }
 
 final class GetAllPemakaianSuccess extends PemakaianState {
   final ListPemakaianEntity listPemakaianEntity;
 
-  GetAllPemakaianSuccess({required this.listPemakaianEntity});
+  const GetAllPemakaianSuccess({required this.listPemakaianEntity});
 
   @override
-  // TODO: implement props
   List<Object> get props => [listPemakaianEntity];
+}
+
+final class GeneratePemakaianPDFMonthlySuccess extends PemakaianState {
+  final GeneratePDFEntity generatePDFEntity;
+
+  const GeneratePemakaianPDFMonthlySuccess({required this.generatePDFEntity});
+  @override
+  List<Object> get props => [
+        generatePDFEntity,
+      ];
 }

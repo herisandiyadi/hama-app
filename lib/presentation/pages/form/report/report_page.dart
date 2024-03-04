@@ -10,8 +10,12 @@ import 'package:hama_app/common/style/style.dart';
 import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/common/utils/text_utils.dart';
+import 'package:hama_app/presentation/bloc/absen/absen_bloc.dart';
 import 'package:hama_app/presentation/bloc/dailiy/daily_bloc.dart';
 import 'package:hama_app/presentation/bloc/index_hama/index_hama_bloc.dart';
+import 'package:hama_app/presentation/bloc/inspeksi/inspeksi_bloc.dart';
+import 'package:hama_app/presentation/bloc/pemakaian/pemakaian_bloc.dart';
+import 'package:hama_app/presentation/bloc/peralatan/peralatan_bloc.dart';
 import 'package:hama_app/presentation/bloc/signature/signature_bloc.dart';
 import 'package:hama_app/presentation/widget/widget_snackbar.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -45,7 +49,8 @@ class _ReportPageState extends State<ReportPage> {
     'Indeks Populasi',
     'Inspeksi Hama',
     'Monitoring Pemakaian',
-    'Monitoring Peralatan'
+    'Monitoring Peralatan',
+    'Time Sheet'
   ];
   String? searchCategories;
 
@@ -167,17 +172,6 @@ class _ReportPageState extends State<ReportPage> {
                 page.getClientSize().height - 180,
                 page.getClientSize().width,
                 20));
-        // graphics.drawString(
-        //   'Personel,',
-        //   PdfStandardFont(PdfFontFamily.helvetica, 12),
-        //   bounds: Rect.fromLTWH(
-        //     // 30,
-        //     page.getClientSize().width - 120,
-        //     page.getClientSize().height - 165,
-        //     page.getClientSize().width,
-        //     20,
-        //   ),
-        // );
 
         page.graphics.drawImage(
           signatureImage2,
@@ -295,6 +289,34 @@ class _ReportPageState extends State<ReportPage> {
                   if (state.listEntity.isNotEmpty) {
                     sign1 = Uint8List.fromList(state.listEntity[0].image);
                   }
+                }
+              },
+            ),
+            BlocListener<AbsenBloc, AbsenState>(
+              listener: (context, state) {
+                if (state is GenerateAbsenPDFMonthlySuccess) {
+                  generatePdf(state.generatePDFEntity.url);
+                }
+              },
+            ),
+            BlocListener<PeralatanBloc, PeralatanState>(
+              listener: (context, state) {
+                if (state is GeneratePeralatanPDFMonthlySuccess) {
+                  generatePdf(state.generatePDFEntity.url);
+                }
+              },
+            ),
+            BlocListener<PemakaianBloc, PemakaianState>(
+              listener: (context, state) {
+                if (state is GeneratePemakaianPDFMonthlySuccess) {
+                  generatePdf(state.generatePDFEntity.url);
+                }
+              },
+            ),
+            BlocListener<InspeksiBloc, InspeksiState>(
+              listener: (context, state) {
+                if (state is GenerateInspeksiPDFMonthlySuccess) {
+                  generatePdf(state.generatePDFEntity.url);
                 }
               },
             ),
@@ -456,11 +478,6 @@ class _ReportPageState extends State<ReportPage> {
                             backgroundColor:
                                 MaterialStateProperty.all(greenColor)),
                         onPressed: () async {
-                          //                        'Daily Activity',
-                          // 'Indeks Populasi',
-                          // 'Inspeksi Hama',
-                          // 'Monitoring Pemakaian',
-                          // 'Monitoring Peralatan'
                           await saveSignature();
                           if (validate()) {
                             final year = dateSelected!.year;
@@ -474,6 +491,32 @@ class _ReportPageState extends State<ReportPage> {
                             } else if (searchCategories == 'Indeks Populasi') {
                               context.read<IndexHamaBloc>().add(
                                   FetchIndexPDFMonthly(
+                                      noOrder: widget.noOrder,
+                                      year: year.toString(),
+                                      month: month.toString()));
+                            } else if (searchCategories == 'Inspeksi Hama') {
+                              context.read<InspeksiBloc>().add(
+                                  FetchInspeksiPDFMonthly(
+                                      noOrder: widget.noOrder,
+                                      year: year.toString(),
+                                      month: month.toString()));
+                            } else if (searchCategories ==
+                                'Monitoring Pemakaian') {
+                              context.read<PemakaianBloc>().add(
+                                  FetchPemakaianPDFMonthly(
+                                      noOrder: widget.noOrder,
+                                      year: year.toString(),
+                                      month: month.toString()));
+                            } else if (searchCategories ==
+                                'Monitoring Peralatan') {
+                              context.read<PeralatanBloc>().add(
+                                  FetchPeralatanPDFMonthly(
+                                      noOrder: widget.noOrder,
+                                      year: year.toString(),
+                                      month: month.toString()));
+                            } else if (searchCategories == 'Time Sheet') {
+                              context.read<AbsenBloc>().add(
+                                  FetchAbsenPDFMonthly(
                                       noOrder: widget.noOrder,
                                       year: year.toString(),
                                       month: month.toString()));

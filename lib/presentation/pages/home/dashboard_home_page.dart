@@ -7,7 +7,6 @@ import 'package:hama_app/common/utils/cache_utils.dart';
 import 'package:hama_app/common/utils/constants.dart';
 import 'package:hama_app/presentation/bloc/order/order_bloc.dart';
 import 'package:hama_app/presentation/pages/home/list_order_page.dart';
-import 'package:hama_app/presentation/pages/signature/signature_document.dart';
 import 'package:hama_app/presentation/widget/icon_home_widget.dart';
 import 'package:hama_app/presentation/widget/widget_snackbar.dart';
 
@@ -48,47 +47,44 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
   @override
   Widget build(BuildContext context) {
     Widget welcome() {
-      return GestureDetector(
-        onTap: () => context.goNamed(CreatePdfWidget.routeName),
+      return Padding(
+        padding: EdgeInsets.only(top: 41.h),
         child: Padding(
-          padding: EdgeInsets.only(top: 41.h),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 48.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.r),
-                    color: whiteColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: greyColor,
-                        blurRadius: 3.r,
-                        offset: const Offset(0.0, 1.0),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: 48.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.r),
+                  color: whiteColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: greyColor,
+                      blurRadius: 3.r,
+                      offset: const Offset(0.0, 1.0),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          height: 32.h,
+                          width: 32.w,
+                          child: const CircleAvatar()),
+                      SizedBox(
+                        width: 2.w,
                       ),
+                      Text(fullName),
                     ],
                   ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                            height: 32.h,
-                            width: 32.w,
-                            child: const CircleAvatar()),
-                        SizedBox(
-                          width: 2.w,
-                        ),
-                        Text(fullName),
-                      ],
-                    ),
-                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -241,10 +237,6 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
               colors: [
                 greenColor,
                 whiteColor,
-                // whiteColor,
-                // whiteColor,
-                // whiteColor,
-                // whiteColor,
               ],
             ),
           ),

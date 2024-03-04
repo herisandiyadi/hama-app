@@ -34,3 +34,13 @@ final class GetAbsenSuccess extends AbsenState {
   @override
   List<Object> get props => [dataAbsenEntity];
 }
+
+final class GenerateAbsenPDFMonthlySuccess extends AbsenState {
+  final GeneratePDFEntity generatePDFEntity;
+
+  const GenerateAbsenPDFMonthlySuccess({required this.generatePDFEntity});
+  @override
+  List<Object> get props => [
+        generatePDFEntity,
+      ];
+}

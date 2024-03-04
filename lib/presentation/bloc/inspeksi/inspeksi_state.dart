@@ -35,3 +35,13 @@ final class GetInspeksiSuccess extends InspeksiState {
   @override
   List<Object> get props => [listInspeksiEntity];
 }
+
+final class GenerateInspeksiPDFMonthlySuccess extends InspeksiState {
+  final GeneratePDFEntity generatePDFEntity;
+
+  const GenerateInspeksiPDFMonthlySuccess({required this.generatePDFEntity});
+  @override
+  List<Object> get props => [
+        generatePDFEntity,
+      ];
+}

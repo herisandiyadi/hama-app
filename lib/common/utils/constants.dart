@@ -1,5 +1,5 @@
 const String baseUrl =
-    'https://b5f7-2404-8000-1000-5dfb-5ef-de4c-2332-49a4.ngrok-free.app';
+    'https://e4f6-2404-8000-1000-5dfb-1086-9888-6939-27d8.ngrok-free.app';
 const String imageUrl = '$baseUrl/uploads';
 const String pdfUrl = '$baseUrl/uploads';
 

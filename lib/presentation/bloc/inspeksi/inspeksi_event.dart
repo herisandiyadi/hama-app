@@ -45,3 +45,21 @@ class FetchGetAllByMonthInspeksi extends InspeksiEvent {
   @override
   List<Object> get props => [noOrder, year, month];
 }
+
+class FetchInspeksiPDFMonthly extends InspeksiEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchInspeksiPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
+}

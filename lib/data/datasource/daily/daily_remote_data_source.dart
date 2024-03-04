@@ -133,7 +133,10 @@ class DailyRemoteDataSourceImpl implements DailyRemoteDataSource {
       Uri.parse('$baseUrl/api/daily/download/$noOrder/$year/$month'),
       headers: headers,
     );
+    print(response.body);
+    print(response.statusCode);
     final json = jsonDecode(response.body);
+    print(json);
     if (response.statusCode == 201) {
       final jsonResponse = GeneratePdfResponse.fromJson(json);
 

@@ -50,3 +50,21 @@ class FetchGetAllbyMonthPemakaian extends PemakaianEvent {
   @override
   List<Object> get props => [noOrder, year, month];
 }
+
+class FetchPemakaianPDFMonthly extends PemakaianEvent {
+  final String noOrder;
+  final String year;
+  final String month;
+
+  const FetchPemakaianPDFMonthly({
+    required this.noOrder,
+    required this.year,
+    required this.month,
+  });
+  @override
+  List<Object> get props => [
+        noOrder,
+        year,
+        month,
+      ];
+}

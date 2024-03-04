@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:hama_app/common/utils/failure.dart';
+import 'package:hama_app/domain/entities/daily/generate_pdf_entity.dart';
 import 'package:hama_app/domain/entities/personal/absen_request.dart';
 import 'package:hama_app/domain/entities/personal/data_absen_entity.dart';
 import 'package:hama_app/domain/entities/personal/personal_entity.dart';
@@ -18,4 +19,6 @@ abstract class PersonalRepository {
       String noOrder, String date);
   Future<Either<Failure, DataAbsenEntity>> getAbsenPersonByMonth(
       String noOrder, String id, String year, String month);
+  Future<Either<Failure, GeneratePDFEntity>> getDownloadPDFMonthly(
+      String noOrder, String year, String month);
 }

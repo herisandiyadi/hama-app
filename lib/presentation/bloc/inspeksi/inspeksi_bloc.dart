@@ -2,6 +2,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:hama_app/domain/entities/daily/generate_pdf_entity.dart';
 import 'package:hama_app/domain/entities/inspeksi/inspeksi_entity.dart';
 import 'package:hama_app/domain/entities/inspeksi/inspeksi_request.dart';
 import 'package:hama_app/domain/entities/inspeksi/list_inspeksi_entity.dart';
@@ -9,6 +10,7 @@ import 'package:hama_app/domain/usecase/inspeksi/add_inspeksi_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_date_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_by_month_usecase.dart';
 import 'package:hama_app/domain/usecase/inspeksi/get_all_inspeksi_usecase.dart';
+import 'package:hama_app/domain/usecase/inspeksi/get_inspeksi_pdf_monthly_usecase.dart';
 
 part 'inspeksi_event.dart';
 part 'inspeksi_state.dart';
@@ -18,11 +20,13 @@ class InspeksiBloc extends Bloc<InspeksiEvent, InspeksiState> {
   final GetAllInspeksiUsecase getAllInspeksiUsecase;
   final GetAllInspeksiByDateUsecase getAllInspeksiByDateUsecase;
   final GetAllInspeksiByMonthUsecase getAllInspeksiByMonthUsecase;
+  final GetInspeksiMonthlyUsecase getInspeksiMonthlyUsecase;
   InspeksiBloc({
     required this.addInspeksiUsecase,
     required this.getAllInspeksiUsecase,
     required this.getAllInspeksiByDateUsecase,
     required this.getAllInspeksiByMonthUsecase,
+    required this.getInspeksiMonthlyUsecase,
   }) : super(InspeksiInitial()) {
     on<FetchAddInspeksi>((event, emit) async {
       emit(InspeksiLoading());
@@ -62,6 +66,16 @@ class InspeksiBloc extends Bloc<InspeksiEvent, InspeksiState> {
         emit(InspeksiFailed(message: failure.message));
       }, (success) {
         emit(GetInspeksiSuccess(listInspeksiEntity: success));
+      });
+    });
+    on<FetchInspeksiPDFMonthly>((event, emit) async {
+      emit(InspeksiLoading());
+      final result = await getInspeksiMonthlyUsecase.execute(
+          event.noOrder, event.year, event.month);
+      result.fold((failure) {
+        emit(InspeksiFailed(message: failure.message));
+      }, (success) {
+        emit(GenerateInspeksiPDFMonthlySuccess(generatePDFEntity: success));
       });
     });
   }
